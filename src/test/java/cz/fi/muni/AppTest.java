@@ -1,4 +1,4 @@
-package com.mycompany.app;
+package cz.fi.muni;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
