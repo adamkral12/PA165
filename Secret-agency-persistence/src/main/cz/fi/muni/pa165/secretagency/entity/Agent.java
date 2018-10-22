@@ -86,13 +86,12 @@ public class Agent {
         if (this == o) return true;
         if (!(o instanceof Agent)) return false;
         Agent agent = (Agent) o;
-        return Objects.equals(getId(), agent.getId()) &&
-                Objects.equals(getName(), agent.getName()) &&
+        return Objects.equals(getName(), agent.getName()) &&
                 Objects.equals(getBirthDate(), agent.getBirthDate());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getBirthDate());
+        return Objects.hash(getName(), getBirthDate());
     }
 }
