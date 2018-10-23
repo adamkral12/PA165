@@ -20,6 +20,12 @@ import java.util.List;
 @Repository
 public abstract class GenericDaoImpl<T> implements GenericDao<T> {
 
+    private Class<T> clazz;
+
+    public GenericDaoImpl(Class<T> clazzToSet ) {
+        this.clazz = clazzToSet;
+    }
+
     @PersistenceContext
     private EntityManager em;
 
@@ -35,21 +41,21 @@ public abstract class GenericDaoImpl<T> implements GenericDao<T> {
     }
 
     @Override
-    public void deleteEntityById(Long id, Class<T> entityClass) {
-        T entityToRemove = em.find(entityClass, id);
+    public void deleteEntityById(Long id) {
+        T entityToRemove = em.find(clazz, id);
         em.remove(entityToRemove);
     }
 
     @Override
-    public T getEntityById(Long id, Class<T> entityClass) {
-        return em.find(entityClass, id);
+    public T getEntityById(Long id) {
+        return em.find(clazz, id);
     }
 
     @Override
-    public List<T> getAll(Class<T> entityClass) {
+    public List<T> getAll() {
         CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<T> query = cb.createQuery(entityClass);
-        Root<T> root = query.from(entityClass);
+        CriteriaQuery<T> query = cb.createQuery(clazz);
+        Root<T> root = query.from(clazz);
         query.select(root);
         return em.createQuery(query).getResultList();
     }
