@@ -22,6 +22,9 @@ public abstract class GenericDaoImpl<T> implements GenericDao<T> {
 
     private Class<T> clazz;
 
+    /**
+     * @param clazzToSet class of entity that should be worked with
+     */
     public GenericDaoImpl(Class<T> clazzToSet ) {
         this.clazz = clazzToSet;
     }
