@@ -1,4 +1,4 @@
-package main.cz.fi.muni.pa165.secretagency.entity;
+package cz.fi.muni.pa165.secretagency.entity;
 
 import java.time.LocalDateTime;
 import java.util.Objects;

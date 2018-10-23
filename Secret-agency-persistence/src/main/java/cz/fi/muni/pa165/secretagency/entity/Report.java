@@ -1,6 +1,6 @@
-package main.cz.fi.muni.pa165.secretagency.entity;
+package cz.fi.muni.pa165.secretagency.entity;
 
-import main.cz.fi.muni.pa165.secretagency.enums.MissionResultReportEnum;
+import cz.fi.muni.pa165.secretagency.enums.MissionResultReportEnum;
 
 import java.time.LocalDate;
 
