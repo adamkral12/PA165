@@ -7,10 +7,10 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>cz.fi.muni.pa165</groupId>
-    <artifactId>Secret-Agency-persitence</artifactId>
+    <artifactId>Secret-agency-persistence</artifactId>
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>pa165-project</name>
+    <name>Secret Agency Persistence</name>
     <url>http://maven.apache.org</url>
     <dependencies>
     </dependencies>
