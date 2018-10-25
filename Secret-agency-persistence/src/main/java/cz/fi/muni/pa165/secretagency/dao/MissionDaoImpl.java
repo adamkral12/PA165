@@ -1,11 +1,13 @@
 package cz.fi.muni.pa165.secretagency.dao;
 
 import cz.fi.muni.pa165.secretagency.entity.Mission;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.TypedQuery;
 import java.time.LocalDate;
 import java.util.List;
 
+@Repository
 public class MissionDaoImpl extends GenericDaoImpl<Mission> implements MissionDao{
     /**
      * Constructor
@@ -27,7 +29,7 @@ public class MissionDaoImpl extends GenericDaoImpl<Mission> implements MissionDa
     public List<Mission> getMissionsInInterval(LocalDate start, LocalDate end) {
         TypedQuery<Mission> query = em
                 .createQuery(
-                        "SELECT m FROM Mission m WHERE m.started BETWEEN :startDate AND :endDate ",
+                        "SELECT m FROM Mission m WHERE m.started BETWEEN :startDate AND :endDate",
                         Mission.class);
         query.setParameter("startDate", start);
         query.setParameter("endDate", end);

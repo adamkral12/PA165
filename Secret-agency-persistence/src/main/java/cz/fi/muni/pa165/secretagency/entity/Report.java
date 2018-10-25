@@ -22,7 +22,6 @@ public class Report {
     @NotNull
     private String text;
 
-    @Temporal(TemporalType.DATE)
     @NotNull
     private LocalDate date;
 

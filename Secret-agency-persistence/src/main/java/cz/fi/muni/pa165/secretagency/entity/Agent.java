@@ -24,7 +24,6 @@ public class Agent {
     @NotNull
     private String name;
 
-    @Temporal(TemporalType.DATE)
     @NotNull
     private LocalDate birthDate;
 
@@ -37,7 +36,6 @@ public class Agent {
     private AgentRankEnum rank;
 
     @NotNull
-    @Enumerated
     private String codeName;
     /**
      *

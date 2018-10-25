@@ -28,11 +28,10 @@ public class Mission {
     @Enumerated
     private MissionTypeEnum missionType;
 
-    @Temporal(TemporalType.DATE)
     @NotNull
+    @Column
     private LocalDate started;
 
-    @Temporal(TemporalType.DATE)
     @NotNull
     private LocalDate ended;
 
