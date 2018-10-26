@@ -168,10 +168,10 @@ public class Agent {
     }
 
     /**
-     * @param missions agent's missions
+     * @param mission adds mission to agent's mission
      */
-    public void setMissions(List<Mission> missions) {
-        this.missions = missions;
+    public void addMission(Mission mission) {
+        this.missions.add(mission);
     }
 
     /**
