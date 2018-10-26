@@ -62,6 +62,8 @@ public class Agent {
         this.languages = languages;
         this.rank = rank;
         this.codeName = codeName;
+        this.missions = missions;
+        this.department = department;
     }
 
     /**
