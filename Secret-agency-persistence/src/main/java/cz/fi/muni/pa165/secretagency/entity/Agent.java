@@ -6,9 +6,7 @@ import cz.fi.muni.pa165.secretagency.enums.LanguageEnum;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Agent entity for the Secret agency project.
@@ -37,6 +35,18 @@ public class Agent {
 
     @NotNull
     private String codeName;
+
+    @ManyToMany
+    @JoinTable(name = "agent_mission",
+            joinColumns = @JoinColumn(name = "agent_id"),
+            inverseJoinColumns = @JoinColumn(name = "mission_id")
+    )
+    private List<Mission> missions = new ArrayList<Mission>();
+
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    @NotNull
+    private Department department;
     /**
      *
      * @param id of agent
@@ -45,7 +55,7 @@ public class Agent {
      * @param languages agent can speak these languages
      * @param rank of agent
      */
-    public Agent(Long id, String name, LocalDate birthDate, Set<LanguageEnum> languages, AgentRankEnum rank, String codeName) {
+    public Agent(Long id, String name, LocalDate birthDate, Set<LanguageEnum> languages, AgentRankEnum rank, String codeName, List<Mission> missions, Department department) {
         this.id = id;
         this.name = name;
         this.birthDate = birthDate;
@@ -148,6 +158,34 @@ public class Agent {
         this.codeName = codeName;
     }
 
+    /**
+     * @return List of agent's missions
+     */
+    public List<Mission> getMissions() {
+        return missions;
+    }
+
+    /**
+     * @param missions agent's missions
+     */
+    public void setMissions(List<Mission> missions) {
+        this.missions = missions;
+    }
+
+    /**
+     * @return get department in which agent is working
+     */
+    public Department getDepartment() {
+        return department;
+    }
+
+    /**
+     * @param department set department in which agent is working
+     */
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -157,11 +195,13 @@ public class Agent {
                 Objects.equals(getBirthDate(), agent.getBirthDate()) &&
                 Objects.equals(getLanguages(), agent.getLanguages()) &&
                 Objects.equals(getRank(), agent.getRank()) &&
-                Objects.equals(getCodeName(), agent.getCodeName());
+                Objects.equals(getCodeName(), agent.getCodeName()) &&
+                Objects.equals(getMissions(), agent.getMissions()) &&
+                Objects.equals(getDepartment(), agent.getDepartment());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName(), getBirthDate(), getLanguages(), getRank(), getCodeName());
+        return Objects.hash(getName(), getBirthDate(), getLanguages(), getRank(), getCodeName(), getMissions(), getDepartment());
     }
 }
