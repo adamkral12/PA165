@@ -9,9 +9,6 @@ import java.util.List;
 
 @Repository
 public class MissionDaoImpl extends GenericDaoImpl<Mission> implements MissionDao{
-    /**
-     * Constructor
-     **/
     protected MissionDaoImpl() {
         super(Mission.class);
     }
