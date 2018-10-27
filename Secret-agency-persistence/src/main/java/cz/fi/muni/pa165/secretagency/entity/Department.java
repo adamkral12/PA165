@@ -1,5 +1,18 @@
 package cz.fi.muni.pa165.secretagency.entity;
 
+
+import cz.fi.muni.pa165.secretagency.enums.DepartmentSpecialization;
+
+import javax.persistence.Entity;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -7,13 +20,29 @@ import java.util.Objects;
  *
  * @author Milos Silhar (433614)
  */
+@Entity
 public class Department {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String city;
+
+    @NotNull
     private String country;
+
+    @NotNull
     private Double latitude;
+
+    @NotNull
     private Double longitude;
+
+    @Enumerated
+    private DepartmentSpecialization specialization;
+
+    @OneToMany
+    private List<Agent> agents = new ArrayList<>();
 
     public Department() {
     }
@@ -93,6 +122,37 @@ public class Department {
         this.longitude = longitude;
     }
 
+    /**
+     * @return Department's specialization
+     */
+    public DepartmentSpecialization getSpecialization() {
+        return specialization;
+    }
+
+    /**
+     * Sets specialization of department.
+     * @param specialization Department's specialization
+     */
+    public void setSpecialization(DepartmentSpecialization specialization) {
+        this.specialization = specialization;
+    }
+
+    /**
+     * @return All agents assotiated with this department.
+     */
+    public List<Agent> getAgents() {
+        return Collections.unmodifiableList(this.agents);
+    }
+
+    /**
+     * Adds agent to this department.
+     * @param agent Agent to be added to this department.
+     */
+    public void addAgent(Agent agent) {
+        this.agents.add(agent);
+        agent.setDepartment(this);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -101,11 +161,12 @@ public class Department {
         return Objects.equals(getCity(), that.getCity()) &&
                 Objects.equals(getCountry(), that.getCountry()) &&
                 Objects.equals(getLatitude(), that.getLatitude()) &&
-                Objects.equals(getLongitude(), that.getLongitude());
+                Objects.equals(getLongitude(), that.getLongitude()) &&
+                Objects.equals(getSpecialization(), that.getSpecialization());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getCity(), getCountry(), getLatitude(), getLongitude());
+        return Objects.hash(getCity(), getCountry(), getLatitude(), getLongitude(), getSpecialization());
     }
 }
