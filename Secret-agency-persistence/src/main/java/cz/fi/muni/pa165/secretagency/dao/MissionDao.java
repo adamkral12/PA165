@@ -1,40 +1,41 @@
 package cz.fi.muni.pa165.secretagency.dao;
 
-import cz.fi.muni.pa165.secretagency.entity.Agent;
 import cz.fi.muni.pa165.secretagency.entity.Mission;
-import cz.fi.muni.pa165.secretagency.entity.Report;
+import cz.fi.muni.pa165.secretagency.enums.MissionTypeEnum;
 
-import java.util.Collection;
+import java.time.LocalDate;
+import java.util.List;
 
 /**
  * @author Adam Kral (433328)
  */
 public interface MissionDao extends GenericDao<Mission> {
     /**
-     * Get all agents on a given mission
-     * @param mission from which agents are selected
-     * @return all agents in given mission
+     * Gets all missions by given type
+     * @param type to filter by
+     * @return list of mission with type
      */
-    Collection<Agent> getAgentsOnMission(Mission mission);
+    List<Mission> getMissionsWithType(MissionTypeEnum type);
 
     /**
-     * Assigns agent to a mission
-     * @param agent to be assigned
-     * @param mission on which the agent should be assigned
+     * Gets all missions which happened in given interval
+     * @param start of interval
+     * @param end of interval
+     * @return list of mission between interval
      */
-    void assignAgentToMission(Agent agent, Mission mission);
+    List<Mission> getMissionsStartedInInterval(LocalDate start, LocalDate end);
 
     /**
-     * Removes agent from a mission
-     * @param agent to be removed from mission
-     * @param mission from which agent should be removed
+     * Returns all missions at a given place
+     * @param latitude of place
+     * @param longitude of place
+     * @return all missions at given place
      */
-    void removeAgentFromMission(Agent agent, Mission mission);
+    List<Mission> getMissionsInPlace(Double latitude, Double longitude);
 
     /**
-     * Returns all reports of a mission
-     * @param mission mission from which the reports should be returned
-     * @return all reports of given mission
+     * Return list of all missions which are currently active
+     * @return currently active missions
      */
-    Collection<Report> getReportsFromMission(Mission mission);
+    List<Mission> getActiveMissions();
 }
