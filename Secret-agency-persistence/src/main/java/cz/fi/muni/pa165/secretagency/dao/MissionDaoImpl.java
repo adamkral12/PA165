@@ -1,6 +1,7 @@
 package cz.fi.muni.pa165.secretagency.dao;
 
 import cz.fi.muni.pa165.secretagency.entity.Mission;
+import cz.fi.muni.pa165.secretagency.enums.MissionTypeEnum;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.TypedQuery;
@@ -14,7 +15,7 @@ public class MissionDaoImpl extends GenericDaoImpl<Mission> implements MissionDa
     }
 
     @Override
-    public List<Mission> getMissionsWithType(String type) {
+    public List<Mission> getMissionsWithType(MissionTypeEnum type) {
         TypedQuery<Mission> query = em.createQuery(
                 "Select m from Mission m where m.missionType = :missionType",
                 Mission.class);
@@ -23,7 +24,7 @@ public class MissionDaoImpl extends GenericDaoImpl<Mission> implements MissionDa
     }
 
     @Override
-    public List<Mission> getMissionsInInterval(LocalDate start, LocalDate end) {
+    public List<Mission> getMissionsStartedInInterval(LocalDate start, LocalDate end) {
         TypedQuery<Mission> query = em
                 .createQuery(
                         "SELECT m FROM Mission m WHERE m.started BETWEEN :startDate AND :endDate",
@@ -41,6 +42,17 @@ public class MissionDaoImpl extends GenericDaoImpl<Mission> implements MissionDa
                         Mission.class);
         query.setParameter("latitude", latitude);
         query.setParameter("longitude", longitude);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Mission> getActiveMissions() {
+        LocalDate now = LocalDate.now();
+        TypedQuery<Mission> query = em
+                .createQuery(
+                        "SELECT m FROM Mission m WHERE m.started <= :now AND m.ended is null ",
+                        Mission.class);
+        query.setParameter("now", now);
         return query.getResultList();
     }
 }

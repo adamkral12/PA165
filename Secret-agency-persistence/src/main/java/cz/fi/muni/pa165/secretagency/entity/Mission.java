@@ -1,6 +1,7 @@
 package cz.fi.muni.pa165.secretagency.entity;
 
 import cz.fi.muni.pa165.secretagency.enums.MissionTypeEnum;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -29,10 +30,9 @@ public class Mission {
     private MissionTypeEnum missionType;
 
     @NotNull
-    @Column
     private LocalDate started;
 
-    @NotNull
+    @Nullable
     private LocalDate ended;
 
     /**
