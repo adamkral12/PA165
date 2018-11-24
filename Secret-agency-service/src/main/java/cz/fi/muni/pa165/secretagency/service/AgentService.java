@@ -13,7 +13,7 @@ import java.util.List;
  * An interface that defines a service access to the {@link Agent} entity.
  * @author (Adam Kral<433328>)
  */
-interface AgentService extends GenericService<Agent> {
+public interface AgentService extends GenericService<Agent> {
     /**
      * Get all agents by a given rank
      * @param rankEnum given rank
