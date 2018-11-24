@@ -55,6 +55,7 @@ public class AgentServiceImpl extends GenericServiceImpl<Agent, AgentDao> implem
             throw new AgentServiceException("Cannot assign agent to mission, already assigned");
         }
         agent.addMission(mission);
+        getDao().merge(agent);
     }
 
     @Override
@@ -70,6 +71,7 @@ public class AgentServiceImpl extends GenericServiceImpl<Agent, AgentDao> implem
             throw new AgentServiceException("Cannot remove agent from mission, could not find mission");
         }
         agent.removeMission(mission);
+        getDao().merge(agent);
     }
 
     @Override
@@ -82,6 +84,7 @@ public class AgentServiceImpl extends GenericServiceImpl<Agent, AgentDao> implem
             throw new NullPointerException("Department cannot be null");
         }
         agent.setDepartment(department);
+        getDao().merge(agent);
     }
 
     @Override
