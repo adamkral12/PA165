@@ -27,7 +27,7 @@ public interface MissionService extends GenericService<Mission> {
      * @param end of interval
      * @return list of mission between interval
      * @throws NullPointerException when any of parameters is null
-     * @throws MissionServiceException when start is above end
+     * @throws MissionServiceException when start is after end
      */
     List<Mission> getMissionsStartedInInterval(LocalDate start, LocalDate end);
 

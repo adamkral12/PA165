@@ -30,7 +30,7 @@ public class MissionServiceImpl extends GenericServiceImpl<Mission, MissionDao> 
     @Override
     public List<Mission> getMissionsStartedInInterval(LocalDate start, LocalDate end) {
         if (start == null || end == null) {
-            throw new NullPointerException("Mission start date and end date is null");
+            throw new NullPointerException("Mission start date or end date is null");
         }
         if (end.isAfter(start)) {
             throw new MissionServiceException("End date is before start date");
@@ -41,7 +41,7 @@ public class MissionServiceImpl extends GenericServiceImpl<Mission, MissionDao> 
     @Override
     public List<Mission> getMissionsInPlace(Double latitude, Double longitude) {
         if (latitude == null || longitude == null) {
-            throw new NullPointerException("Mission start date and end date is null");
+            throw new NullPointerException("Latitude or longitude is null");
         }
         return getDao().getMissionsInPlace(latitude, longitude);
     }
