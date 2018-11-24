@@ -10,7 +10,6 @@ import cz.fi.muni.pa165.secretagency.service.config.ServiceConfiguration;
 import cz.fi.muni.pa165.secretagency.service.exceptions.ReportServiceException;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.internal.matchers.Null;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
