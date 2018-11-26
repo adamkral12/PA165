@@ -29,7 +29,7 @@ public interface MissionFacade {
      * Create new mission.
      * @param mission to create
      */
-    void createMission(MissionCreateDTO mission);
+    Long createMission(MissionCreateDTO mission);
 
     /**
      * Delete mission.

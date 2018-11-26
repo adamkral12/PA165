@@ -7,7 +7,9 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.NoResultException;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Implementation of AgentDao interface.
@@ -51,5 +53,13 @@ public class AgentDaoImpl extends GenericDaoImpl<Agent> implements AgentDao {
         return em.createQuery("SELECT a FROM Agent a WHERE a.birthDate BETWEEN :lowerDate AND :upperDate", Agent.class)
                 .setParameter("upperDate", upperBirthDate).setParameter("lowerDate", lowerBirthDate)
                 .getResultList();
+    }
+
+    @Override
+    public Set<Agent> getAgentsWithCodeNames(Set<String> codeNames) {
+        List<Agent> agents =  em.createQuery("SELECT a FROM Agent a WHERE a.codeName IN :codeNames", Agent.class)
+                                .setParameter("codeNames", codeNames)
+                                .getResultList();
+        return new HashSet<>(agents);
     }
 }

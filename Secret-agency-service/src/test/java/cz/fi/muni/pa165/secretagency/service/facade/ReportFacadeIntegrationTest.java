@@ -121,7 +121,6 @@ public class ReportFacadeIntegrationTest extends AbstractTestNGSpringContextTest
         Assert.assertEquals(newReport.getReportStatus(), ReportStatus.NEW);
         Assert.assertEquals(newReport.getText(), reportCreateDTO.getText());
         Assert.assertEquals(newReport.getMissionResult(), reportCreateDTO.getMissionResult());
-        Assert.assertEquals(newReport.getAgentDTO(), beanMappingService.mapTo(babis, AgentDTO.class));
 
         // remove newly created report - get to the original state
         reportFacade.deleteReport(newReportId);

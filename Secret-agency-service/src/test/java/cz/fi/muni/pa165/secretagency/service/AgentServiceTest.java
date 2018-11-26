@@ -19,10 +19,13 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 
 /**
@@ -176,5 +179,21 @@ public class AgentServiceTest extends AbstractTestNGSpringContextTests {
         List<Agent> agents = agentService.getSoonRetiringAgents();
         assertEquals(1, agents.size());
         assertEquals(50L, (long) agents.get(0).getId());
+    }
+
+    @Test
+    public void getAgentsWithCodeNamesTest() {
+        Agent pepa = new Agent();
+        pepa.setId(3L);
+        pepa.setCodeName("Pepa");
+        Set<Agent> agentsWithCodenames = new HashSet<>();
+        agentsWithCodenames.add(pepa);
+
+        Set<String> codeNames = new HashSet<>();
+        codeNames.add("Pepa");
+        when(agentDao.getAgentsWithCodeNames(codeNames)).thenReturn(agentsWithCodenames);
+        Set<Agent> agents = agentService.getAgentsWithCodeNames(codeNames);
+        assertEquals(agents.size(), 1);
+        assertTrue(agents.stream().anyMatch(agent -> agent.getId().equals(3L)));
     }
 }

@@ -1,6 +1,7 @@
 package cz.fi.muni.pa165.secretagency.service;
 
 import cz.fi.muni.pa165.secretagency.dao.ReportDao;
+import cz.fi.muni.pa165.secretagency.entity.Agent;
 import cz.fi.muni.pa165.secretagency.entity.Mission;
 import cz.fi.muni.pa165.secretagency.entity.Report;
 import cz.fi.muni.pa165.secretagency.enums.MissionResultReportEnum;
@@ -20,9 +21,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.mockito.Mockito.when;
 
@@ -39,6 +38,9 @@ public class ReportServiceTest extends AbstractTestNGSpringContextTests {
     @Mock
     private ReportDao reportDao;
 
+    @Mock
+    private AgentService agentService;
+
     @Autowired
     private ReportService reportService;
 
@@ -46,6 +48,7 @@ public class ReportServiceTest extends AbstractTestNGSpringContextTests {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         ReflectionTestUtils.setField(reportService, "dao", reportDao);
+        ReflectionTestUtils.setField(reportService, "agentService", agentService);
     }
 
     /*****************************************************
@@ -239,5 +242,92 @@ public class ReportServiceTest extends AbstractTestNGSpringContextTests {
           expectedExceptionsMessageRegExp = "Report status must be set")
     public void changeReportStatusStatusNotSet() {
         reportService.changeReportStatus(new Report(), null);
+    }
+
+    /*****************************************************
+     *  GET AGENTS MENTIONED IN REPORT
+     ****************************************************/
+    /**
+     * This test covers following cases:
+     *   - multiple agent mentioned in report
+     *   - case insensitivity
+     *   - agent mentioned multiple times
+     *   - agent is not found when his name is not prefixed with "agent'
+     */
+    @Test
+    public void getAgentsMentionedInReportOk() {
+        Report report = new Report();
+        report.setId(1L);
+        report.setText("I worked on this mission with agent BLACK and agent Rapist. Agent black was great teammate." +
+                " Hawk");
+
+        Set<String> matchedCodename = new HashSet<>();
+        matchedCodename.add("black");
+        matchedCodename.add("rapist");
+
+        // creating matched agents
+        Agent hawk = new Agent();
+        hawk.setId(5L);
+        hawk.setCodeName("hawk");
+        Agent black = new Agent();
+        black.setId(115L);
+        black.setCodeName("Black");
+        Agent rapist = new Agent();
+        rapist.setId(22L);
+        rapist.setCodeName("Rapist");
+        Set<Agent> matchedAgents = new HashSet<>();
+        matchedAgents.add(black);
+        matchedAgents.add(rapist);
+
+        when(reportDao.getEntityById(report.getId())).thenReturn(report);
+        when(agentService.getAll()).thenReturn(Arrays.asList(hawk, black, rapist));
+        when(agentService.getAgentsWithCodeNames(matchedCodename)).thenReturn(matchedAgents);
+
+        Set<Agent> foundAgents = reportService.getAgentsMentionedInReport(report.getId());
+        Assert.assertEquals(foundAgents.size(), matchedAgents.size());
+        Assert.assertTrue(foundAgents.contains(black));
+        Assert.assertTrue(foundAgents.contains(rapist));
+    }
+
+    @Test
+    public void getAgentsMentionedInReportNoAgent() {
+        Report report = new Report();
+        report.setId(1L);
+        report.setText("No agent is mentioned in this report");
+
+        Agent hawk = new Agent();
+        hawk.setId(5L);
+        hawk.setCodeName("hawk");
+
+        when(reportDao.getEntityById(report.getId())).thenReturn(report);
+        when(agentService.getAll()).thenReturn(Collections.singletonList(hawk));
+        when(agentService.getAgentsWithCodeNames(new HashSet<>())).thenReturn(new HashSet<>());
+
+        Assert.assertEquals(reportService.getAgentsMentionedInReport(report.getId()).size(), 0);
+    }
+
+    @Test(expectedExceptions = NullPointerException.class,
+          expectedExceptionsMessageRegExp = "Report id must be set")
+    public void getAgentsMentionedInReportIdNotSet() {
+        reportService.getAgentsMentionedInReport(null);
+    }
+
+    @Test(expectedExceptions = ReportServiceException.class,
+          expectedExceptionsMessageRegExp = "Report with given id does not exist")
+    public void getAgentsMentionedInReportReportDoesNotExist() {
+        when(reportDao.getEntityById(3L)).thenReturn(null);
+        reportService.getAgentsMentionedInReport(3L);
+    }
+
+    @Test(expectedExceptions = ReportServiceException.class,
+          expectedExceptionsMessageRegExp = "Database does not contain any agents")
+    public void getAgentsMentionedInReportNoAgentsInDB() {
+        Report report = new Report();
+        report.setId(1L);
+        report.setText("No agent is mentioned in this report");
+
+        when(reportDao.getEntityById(3L)).thenReturn(report);
+        when(agentService.getAll()).thenReturn(new ArrayList<>());
+        reportService.getAgentsMentionedInReport(3L);
     }
 }

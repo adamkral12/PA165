@@ -23,9 +23,11 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
 
 /**
  * @author Adam Skurla (487588)
@@ -141,5 +143,24 @@ public class AgentDaoTests extends AbstractTestNGSpringContextTests {
     public void getSoonRetiringAgents() {
         List<Agent> agents = agentDao.getSoonRetiringAgents();
         assertEquals(agents.size(), 1);
+    }
+
+    @Test
+    public void getAgentsWithCodeNames() {
+        Set<String> codeNames = new HashSet<>();
+        codeNames.add(agent1.getCodeName());
+        codeNames.add(agent2.getCodeName());
+        Set<Agent> agents = agentDao.getAgentsWithCodeNames(codeNames);
+        assertEquals(agents.size(), 2);
+        assertTrue(agents.contains(agent1));
+        assertTrue(agents.contains(agent2));
+    }
+
+    @Test
+    public void getAgentsWithCodeNamesNoAgents() {
+        Set<String> codeNames = new HashSet<>();
+        codeNames.add("Bob");
+        codeNames.add("Bobek");
+        assertEquals(agentDao.getAgentsWithCodeNames(codeNames).size(), 0);
     }
 }
