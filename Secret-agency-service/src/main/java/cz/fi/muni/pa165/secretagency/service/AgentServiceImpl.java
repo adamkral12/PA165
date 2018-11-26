@@ -52,7 +52,7 @@ public class AgentServiceImpl extends GenericServiceImpl<Agent, AgentDao> implem
         if (agent.getMissions().contains(mission)) {
             throw new AgentServiceException("Cannot assign agent to mission, already assigned");
         }
-        agent.addMission(mission);
+        mission.addAgent(agent);
         getDao().merge(agent);
     }
 
@@ -68,7 +68,7 @@ public class AgentServiceImpl extends GenericServiceImpl<Agent, AgentDao> implem
         if (!agent.getMissions().contains(mission)) {
             throw new AgentServiceException("Cannot remove agent from mission, could not find mission");
         }
-        agent.removeMission(mission);
+        mission.removeAgent(agent);
         getDao().merge(agent);
     }
 

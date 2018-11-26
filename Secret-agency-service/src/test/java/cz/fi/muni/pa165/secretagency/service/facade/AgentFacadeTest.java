@@ -2,8 +2,6 @@ package cz.fi.muni.pa165.secretagency.service.facade;
 
 import cz.fi.muni.pa165.secretagency.dto.AgentCreateDTO;
 import cz.fi.muni.pa165.secretagency.dto.AgentDTO;
-import cz.fi.muni.pa165.secretagency.dto.DepartmentDTO;
-import cz.fi.muni.pa165.secretagency.dto.MissionDTO;
 import cz.fi.muni.pa165.secretagency.entity.Agent;
 import cz.fi.muni.pa165.secretagency.entity.Department;
 import cz.fi.muni.pa165.secretagency.entity.Mission;
@@ -163,25 +161,25 @@ public class AgentFacadeTest extends AbstractTestNGSpringContextTests {
 
     @Test
     public void assignAgentToMissionTest() {
-        AgentDTO agentDTO = beanMappingService.mapTo(jamesBond, AgentDTO.class);
-        MissionDTO missionDTO = beanMappingService.mapTo(saveTheWorld, MissionDTO.class);
         when(missionService.getEntityById(saveTheWorld.getId())).thenReturn(saveTheWorld);
-        agentFacade.assignAgentToMission(agentDTO, missionDTO);
+        when(agentService.getEntityById(jamesBond.getId())).thenReturn(jamesBond);
+        agentFacade.assignAgentToMission(jamesBond.getId(), saveTheWorld.getId());
+        verify(agentService).assignAgentToMission(jamesBond, saveTheWorld);
     }
 
     @Test
     public void removeAgentFromMissionTest() {
-        AgentDTO agentDTO = beanMappingService.mapTo(jamesBond, AgentDTO.class);
-        MissionDTO missionDTO = beanMappingService.mapTo(saveTheWorld, MissionDTO.class);
         when(missionService.getEntityById(saveTheWorld.getId())).thenReturn(saveTheWorld);
-        agentFacade.removeAgentFromMission(agentDTO, missionDTO);
+        when(agentService.getEntityById(jamesBond.getId())).thenReturn(jamesBond);
+        agentFacade.removeAgentFromMission(jamesBond.getId(), saveTheWorld.getId());
+        verify(agentService).removeAgentFromMission(jamesBond, saveTheWorld);
     }
 
     @Test
     public void addAgentToDepartmentTest() {
-        AgentDTO agentDTO = beanMappingService.mapTo(jamesBond, AgentDTO.class);
-        DepartmentDTO departmentDTO = beanMappingService.mapTo(fbi, DepartmentDTO.class);
         when(departmentService.getEntityById(fbi.getId())).thenReturn(fbi);
-        agentFacade.addAgentToDepartment(agentDTO, departmentDTO);
+        when(agentService.getEntityById(jamesBond.getId())).thenReturn(jamesBond);
+        agentFacade.addAgentToDepartment(jamesBond.getId(), fbi.getId());
+        verify(agentService).addAgentToDepartment(jamesBond, fbi);
     }
 }
