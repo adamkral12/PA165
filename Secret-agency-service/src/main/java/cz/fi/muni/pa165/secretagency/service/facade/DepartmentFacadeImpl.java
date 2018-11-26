@@ -53,7 +53,7 @@ public class DepartmentFacadeImpl implements DepartmentFacade {
 
     @Override
     public void deleteDepartment(Long departmentId) {
-        departmentService.delete(departmentService.getEntityById(departmentId));
+        departmentService.deleteEntityById(departmentId);
     }
 
     @Override

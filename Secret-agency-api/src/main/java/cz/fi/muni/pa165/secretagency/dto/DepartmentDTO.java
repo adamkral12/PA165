@@ -1,5 +1,7 @@
 package cz.fi.muni.pa165.secretagency.dto;
 
+import cz.fi.muni.pa165.secretagency.enums.DepartmentSpecialization;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -21,6 +23,8 @@ public class DepartmentDTO {
 
     private Double longitude;
 
+    private DepartmentSpecialization specialization;
+
     private List<AgentDTO> agents = new ArrayList<>();
 
     public Long getId() { return id; }
@@ -37,6 +41,9 @@ public class DepartmentDTO {
 
     public Double getLongitude() { return longitude; }
     public void setLongitude(Double longitude) { this.longitude = longitude; }
+
+    public DepartmentSpecialization getSpecialization() { return specialization; }
+    public void setSpecialization(DepartmentSpecialization specialization) { this.specialization = specialization; }
 
     public List<AgentDTO> getAgents() { return agents; }
     public void setAgents(List<AgentDTO> agents) { this.agents = agents; }
