@@ -5,6 +5,7 @@ import cz.fi.muni.pa165.secretagency.enums.AgentRankEnum;
 import cz.fi.muni.pa165.secretagency.enums.LanguageEnum;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * DAO interface that works with agents.
@@ -38,4 +39,12 @@ public interface AgentDao extends GenericDao<Agent> {
      * @return List of retiring agents.
      */
     List<Agent> getSoonRetiringAgents();
+
+    /**
+     * Returns agents with selected codeNames
+     * @param codeNames set of selected codeNames
+     * @return set of agent with selected codeNames or empty set, when parameter is empty or no agent is found
+     * @throws NullPointerException when codeNames is not set
+     */
+    Set<Agent> getAgentsWithCodeNames(Set<String> codeNames);
 }

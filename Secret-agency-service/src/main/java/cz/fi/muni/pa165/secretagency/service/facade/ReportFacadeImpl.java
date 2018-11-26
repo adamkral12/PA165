@@ -1,5 +1,6 @@
 package cz.fi.muni.pa165.secretagency.service.facade;
 
+import cz.fi.muni.pa165.secretagency.dto.AgentDTO;
 import cz.fi.muni.pa165.secretagency.dto.ReportCreateDTO;
 import cz.fi.muni.pa165.secretagency.dto.ReportDTO;
 import cz.fi.muni.pa165.secretagency.dto.ReportUpdateTextDTO;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -121,5 +123,10 @@ public class ReportFacadeImpl implements ReportFacade {
         Mission mission = missionService.getEntityById(missionId);
         return beanMappingService.mapTo(reportService.getReportsWithStatusFromMission(reportStatus, mission),
                 ReportDTO.class);
+    }
+
+    @Override
+    public Set<AgentDTO> getAgentsMentionedInReport(Long reportId) {
+        return beanMappingService.mapToSet(reportService.getAgentsMentionedInReport(reportId), AgentDTO.class);
     }
 }

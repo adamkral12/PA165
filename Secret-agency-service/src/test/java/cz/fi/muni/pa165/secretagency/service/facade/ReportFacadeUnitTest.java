@@ -1,5 +1,6 @@
 package cz.fi.muni.pa165.secretagency.service.facade;
 
+import cz.fi.muni.pa165.secretagency.dto.AgentDTO;
 import cz.fi.muni.pa165.secretagency.dto.ReportCreateDTO;
 import cz.fi.muni.pa165.secretagency.dto.ReportDTO;
 import cz.fi.muni.pa165.secretagency.dto.ReportUpdateTextDTO;
@@ -25,9 +26,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.mockito.Mockito.*;
 
@@ -214,6 +213,14 @@ public class ReportFacadeUnitTest extends AbstractTestNGSpringContextTests {
                 transferBabisJrToKrym.getId());
         Assert.assertEquals(reportsWithStatusFromMission.size(), 1);
         Assert.assertEquals(reportsWithStatusFromMission.get(0).getId(), transferBabisJrToKrymReport.getId());
+    }
+
+    @Test
+    public void getAgentsMentionedInReport() {
+        Set<Agent> mentionedAgents = new HashSet<>(Arrays.asList(babis));
+        when(reportService.getAgentsMentionedInReport(transferBabisJrToKrymReport.getId())).thenReturn(mentionedAgents);
+        Assert.assertEquals(reportFacade.getAgentsMentionedInReport(transferBabisJrToKrymReport.getId()),
+                beanMappingService.mapToSet(mentionedAgents, AgentDTO.class));
     }
 
 }

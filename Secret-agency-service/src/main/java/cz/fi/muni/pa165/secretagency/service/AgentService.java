@@ -8,6 +8,7 @@ import cz.fi.muni.pa165.secretagency.enums.LanguageEnum;
 import cz.fi.muni.pa165.secretagency.service.exceptions.AgentServiceException;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * An interface that defines a service access to the {@link Agent} entity.
@@ -70,4 +71,12 @@ public interface AgentService extends GenericService<Agent> {
      * @return all soon retiring agents
      */
     List<Agent> getSoonRetiringAgents();
+
+    /**
+     * Returns agents with selected codeNames
+     * @param codeNames set of selected codeNames
+     * @return set of agent with selected codeNames or empty set, when parameter is empty or no agent is found
+     * @throws NullPointerException when codeNames is not set
+     */
+    Set<Agent> getAgentsWithCodeNames(Set<String> codeNames);
 }

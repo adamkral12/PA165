@@ -1,5 +1,6 @@
 package cz.fi.muni.pa165.secretagency.facade;
 
+import cz.fi.muni.pa165.secretagency.dto.AgentDTO;
 import cz.fi.muni.pa165.secretagency.dto.ReportCreateDTO;
 import cz.fi.muni.pa165.secretagency.dto.ReportDTO;
 import cz.fi.muni.pa165.secretagency.dto.ReportUpdateTextDTO;
@@ -8,6 +9,7 @@ import cz.fi.muni.pa165.secretagency.enums.ReportStatus;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Facade for report.
@@ -91,4 +93,13 @@ public interface ReportFacade {
      */
     List<ReportDTO> getReportsWithStatusFromMission(ReportStatus reportStatus, Long missionId);
 
+    /**
+     * Returns set of agents mentioned in report. Agents codename must be prefixed with word "agent" in the text
+     *   to be recognized. For example "agent Black" is recognized, if Black is agents codename, but plain "black" is
+     *   not. This rule helps to avoid fake matches.
+     *
+     * @param reportId id of the report
+     * @return set of matched agents or empty set
+     */
+    Set<AgentDTO> getAgentsMentionedInReport(Long reportId);
 }

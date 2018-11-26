@@ -38,9 +38,10 @@ public class MissionFacadeImpl implements MissionFacade {
     }
 
     @Override
-    public void createMission(MissionCreateDTO mission) {
+    public Long createMission(MissionCreateDTO mission) {
         Mission mappedMission = beanMappingService.mapTo(mission, Mission.class);
-        missionService.save(mappedMission);
+        Mission savedMission = missionService.save(mappedMission);
+        return savedMission.getId();
     }
 
     @Override

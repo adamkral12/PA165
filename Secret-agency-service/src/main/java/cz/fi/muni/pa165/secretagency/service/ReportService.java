@@ -1,5 +1,6 @@
 package cz.fi.muni.pa165.secretagency.service;
 
+import cz.fi.muni.pa165.secretagency.entity.Agent;
 import cz.fi.muni.pa165.secretagency.entity.Mission;
 import cz.fi.muni.pa165.secretagency.entity.Report;
 import cz.fi.muni.pa165.secretagency.enums.MissionResultReportEnum;
@@ -8,6 +9,7 @@ import cz.fi.muni.pa165.secretagency.service.exceptions.ReportServiceException;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 /**
  * An interface that defines a service access to the {@link Report} entity.
@@ -63,4 +65,17 @@ public interface ReportService extends GenericService<Report> {
      * @param reportStatus new status
      */
     void changeReportStatus(Report report, ReportStatus reportStatus);
+
+    /**
+     * Returns set of agents mentioned in report. Agents codename must be prefixed with word "agent" in the text
+     *   to be recognized. For example "agent Black" is recognized, if Black is agents codename, but plain "black" is
+     *   not. This rule helps to avoid fake matches.
+     *
+     * @param reportId id of the report
+     * @return set of matched agents or empty set
+     * @throws NullPointerException when reportId is not set
+     * @throws ReportServiceException when report with given id does not exist
+     * @throws ReportServiceException when database does not contain any agents
+     */
+    Set<Agent> getAgentsMentionedInReport(Long reportId);
 }
