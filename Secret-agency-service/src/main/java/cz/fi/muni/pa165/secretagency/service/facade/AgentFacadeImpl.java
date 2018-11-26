@@ -3,8 +3,6 @@ package cz.fi.muni.pa165.secretagency.service.facade;
 import cz.fi.muni.pa165.secretagency.dto.AgentCreateDTO;
 import cz.fi.muni.pa165.secretagency.dto.AgentDTO;
 import cz.fi.muni.pa165.secretagency.entity.Agent;
-import cz.fi.muni.pa165.secretagency.entity.Department;
-import cz.fi.muni.pa165.secretagency.entity.Mission;
 import cz.fi.muni.pa165.secretagency.enums.AgentRankEnum;
 import cz.fi.muni.pa165.secretagency.enums.LanguageEnum;
 import cz.fi.muni.pa165.secretagency.facade.AgentFacade;
@@ -75,23 +73,26 @@ public class AgentFacadeImpl implements AgentFacade {
 
     @Override
     public void assignAgentToMission(Long agentId, Long missionId) {
-        Mission mappedMission = beanMappingService.mapTo(missionService.getEntityById(missionId), Mission.class);
-        Agent mappedAgent = beanMappingService.mapTo(agentService.getEntityById(agentId), Agent.class);
-        agentService.assignAgentToMission(mappedAgent, mappedMission);
+        agentService.assignAgentToMission(
+                agentService.getEntityById(agentId),
+                missionService.getEntityById(missionId)
+        );
     }
 
     @Override
     public void removeAgentFromMission(Long agentId, Long missionId) {
-        Mission mappedMission = beanMappingService.mapTo(missionService.getEntityById(missionId), Mission.class);
-        Agent mappedAgent = beanMappingService.mapTo(agentService.getEntityById(agentId), Agent.class);
-        agentService.removeAgentFromMission(mappedAgent, mappedMission);
+        agentService.removeAgentFromMission(
+                agentService.getEntityById(agentId),
+                missionService.getEntityById(missionId)
+        );
     }
 
     @Override
     public void addAgentToDepartment(Long agentId, Long departmentId) {
-        Department mappedDepartment = beanMappingService.mapTo(departmentService.getEntityById(departmentId), Department.class);
-        Agent mappedAgent = beanMappingService.mapTo(agentService.getEntityById(agentId), Agent.class);
-        agentService.addAgentToDepartment(mappedAgent, mappedDepartment);
+        agentService.addAgentToDepartment(
+                agentService.getEntityById(agentId),
+                departmentService.getEntityById(departmentId)
+        );
     }
 
     @Override
