@@ -1,17 +1,16 @@
 package cz.fi.muni.pa165.secretagency.controllers;
 
 import cz.fi.muni.pa165.secretagency.ApiUris;
+import cz.fi.muni.pa165.secretagency.dto.DepartmentCreateDTO;
 import cz.fi.muni.pa165.secretagency.dto.DepartmentDTO;
+import cz.fi.muni.pa165.secretagency.dto.DepartmentUpdateSpecializationDTO;
 import cz.fi.muni.pa165.secretagency.exceptions.ResourceNotFoundException;
 import cz.fi.muni.pa165.secretagency.facade.DepartmentFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -57,6 +56,47 @@ public class DepartmentsController {
         } catch (Exception ex) {
             throw new ResourceNotFoundException();
         }
+    }
 
+    /**
+     curl -X POST -i -H "Content-Type: application/json" --data \
+     '{ "city": "Ostrava", "country": "Czech Republic","longitude": 123213.32,"latitude": 123.231,"specialization": "ASSASSINATION"}'\
+     http://localhost:8080/pa165/rest/departments/
+     *
+     * @param department department to be created
+     * @return DepartmentDTO created department
+     * @throws Exception
+     */
+    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public final DepartmentDTO createDepartment(@RequestBody DepartmentCreateDTO department) throws Exception {
+
+        logger.debug("rest createDepartment()");
+
+        Long id = departmentFacade.createDepartment(department);
+        return departmentFacade.getDepartmentById(id);
+    }
+
+    /**
+     curl -X PUT -i -H "Content-Type: application/json" --data \
+     '{ "departmentId":1 ,"specialization": "ASSASSINATION"}'\
+     http://localhost:8080/pa165/rest/departments/specializations/
+     *
+     * @param specialization department specialization
+     * @return DepartmentDTO updated department
+     * @throws Exception
+     */
+    @RequestMapping(value = "/specializations", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public final DepartmentDTO changeDepartmentSpecialization(@RequestBody DepartmentUpdateSpecializationDTO specialization) throws Exception {
+
+        logger.debug("rest update Department specialization()");
+
+        try {
+            departmentFacade.changeSpecialization(specialization);
+            return departmentFacade.getDepartmentById(specialization.getDepartmentId());
+        } catch (Exception ex) {
+            throw new ResourceNotFoundException();
+        }
     }
 }
