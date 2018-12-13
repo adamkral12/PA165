@@ -4,6 +4,7 @@ import cz.fi.muni.pa165.secretagency.ApiUris;
 import cz.fi.muni.pa165.secretagency.dto.DepartmentCreateDTO;
 import cz.fi.muni.pa165.secretagency.dto.DepartmentDTO;
 import cz.fi.muni.pa165.secretagency.dto.DepartmentUpdateSpecializationDTO;
+import cz.fi.muni.pa165.secretagency.enums.DepartmentSpecialization;
 import cz.fi.muni.pa165.secretagency.exceptions.ResourceNotFoundException;
 import cz.fi.muni.pa165.secretagency.facade.DepartmentFacade;
 import org.slf4j.Logger;
@@ -40,7 +41,7 @@ public class DepartmentsController {
 
     /**
      *
-     * Get Department by identifier id curl -i -X GET
+     * Get Department by identifier id
      * curl -i -X GET http://localhost:8080/pa165/rest/departments/1
      *
      * @param id identifier for a department
@@ -71,7 +72,7 @@ public class DepartmentsController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public final DepartmentDTO createDepartment(@RequestBody DepartmentCreateDTO department) throws Exception {
 
-        logger.debug("rest createDepartment()");
+        logger.debug("rest createDepartment({})", department);
 
         Long id = departmentFacade.createDepartment(department);
         return departmentFacade.getDepartmentById(id);
@@ -84,13 +85,12 @@ public class DepartmentsController {
      *
      * @param specialization department specialization
      * @return DepartmentDTO updated department
-     * @throws Exception
      */
     @RequestMapping(value = "/specializations", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public final DepartmentDTO changeDepartmentSpecialization(@RequestBody DepartmentUpdateSpecializationDTO specialization) throws Exception {
+    public final DepartmentDTO changeDepartmentSpecialization(@RequestBody DepartmentUpdateSpecializationDTO specialization) {
 
-        logger.debug("rest update Department specialization()");
+        logger.debug("rest update Department specialization({})", specialization);
 
         try {
             departmentFacade.changeSpecialization(specialization);
@@ -98,5 +98,69 @@ public class DepartmentsController {
         } catch (Exception ex) {
             throw new ResourceNotFoundException();
         }
+    }
+
+    /**
+     * curl -i -X GET http://localhost:8080/pa165/rest/departments/specializations
+     * @return All possible department specializations
+     */
+    @RequestMapping(value = "/specializations", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public final DepartmentSpecialization[] getDepartmentSpecializations() {
+        logger.debug("rest get Department specializations()");
+        return departmentFacade.getSpecializations();
+    }
+
+    /**
+     * curl -i -X GET http://localhost:8080/pa165/rest/departments/specialization/ASSASSINATION
+     * @return All departments with given specialization
+     */
+    @RequestMapping(
+            value = "/specialization/{specialization}",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public final List<DepartmentDTO> getDepartmentsBySpecialization(
+            @PathVariable("specialization") DepartmentSpecialization specialization
+    ) {
+        logger.debug("rest get Department by specialization({})", specialization);
+        return departmentFacade.getDepartmentsBySpecialization(specialization);
+    }
+
+    /**
+     * curl -i -X GET http://localhost:8080/pa165/rest/departments/city/Czech Republic
+     * @return All possible department specializations
+     */
+    @RequestMapping(value = "/city/{city}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public final List<DepartmentDTO> getDepartmentsByCity(
+            @PathVariable("city") String city
+    ) {
+        logger.debug("rest get Department by city({})", city);
+        return departmentFacade.getDepartmentsByCity(city);
+    }
+
+    /**
+     * curl -i -X GET http://localhost:8080/pa165/rest/departments/country/Prague
+     * @return All possible department specializations
+     */
+    @RequestMapping(value = "/country/{country}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public final List<DepartmentDTO> getDepartmentsByCountry(
+            @PathVariable("country") String country
+    ) {
+        logger.debug("rest get Department by country({})", country);
+        return departmentFacade.getDepartmentsByCountry(country);
+    }
+
+    /**
+     * curl -i -X GET http://localhost:8080/pa165/rest/departments/area/50.08804/14.4207/20
+     * @return All possible department specializations
+     */
+    @RequestMapping(value = "/area/{latitude}/{longitude}/{distance}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public final List<DepartmentDTO> getDepartmentsByArea(
+            @PathVariable("latitude") Double latitude,
+            @PathVariable("longitude") Double longitude,
+            @PathVariable("distance") Double distance
+    ) {
+        logger.debug("rest get Department by area(latitude {}, longitude {}, distance {})", latitude, longitude, distance);
+        return departmentFacade.getDepartmentsByArea(latitude, longitude, distance);
     }
 }

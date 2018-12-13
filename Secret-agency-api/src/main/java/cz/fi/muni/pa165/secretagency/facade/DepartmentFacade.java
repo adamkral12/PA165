@@ -40,6 +40,12 @@ public interface DepartmentFacade {
     void changeSpecialization(DepartmentUpdateSpecializationDTO departmentUpdateSpecializationDTO);
 
     /**
+     * Get all possible specializations
+     * @return all specializations
+     */
+    DepartmentSpecialization[] getSpecializations();
+
+    /**
      * Deletes department with diven id
      * @param departmentId id of department to deleted
      */
