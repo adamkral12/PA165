@@ -5,6 +5,7 @@ import cz.fi.muni.pa165.secretagency.dto.DepartmentCreateDTO;
 import cz.fi.muni.pa165.secretagency.dto.DepartmentDTO;
 import cz.fi.muni.pa165.secretagency.dto.DepartmentUpdateSpecializationDTO;
 import cz.fi.muni.pa165.secretagency.enums.DepartmentSpecialization;
+import cz.fi.muni.pa165.secretagency.exceptions.InvalidRequestRemainingAgentsInDepartment;
 import cz.fi.muni.pa165.secretagency.exceptions.ResourceNotFoundException;
 import cz.fi.muni.pa165.secretagency.facade.DepartmentFacade;
 import org.slf4j.Logger;
@@ -61,15 +62,20 @@ public class DepartmentsController {
      * @param id department id
      * @throws ResourceNotFoundException
      */
-//    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-//    public final void deleteDepartment(@PathVariable("id") Long id) throws ResourceNotFoundException {
-//        logger.debug("rest deleteDepartment({})", id);
-//        try {
-//            departmentFacade.deleteDepartment(id);
-//        } catch (Exception ex) {
-//            throw new ResourceNotFoundException();
-//        }
-//    }
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public final void deleteDepartment(@PathVariable("id") Long id) throws ResourceNotFoundException, InvalidRequestRemainingAgentsInDepartment {
+        logger.debug("rest deleteDepartment({})", id);
+        try {
+            DepartmentDTO department = departmentFacade.getDepartmentById(id);
+
+            if (!department.getAgentIds().isEmpty()) {
+                throw new InvalidRequestRemainingAgentsInDepartment();
+            }
+            departmentFacade.deleteDepartment(id);
+        } catch (IllegalArgumentException ex) {
+            throw new ResourceNotFoundException();
+        }
+    }
 
     /**
      * @param department department to be created
