@@ -1,19 +1,19 @@
-.agents-table {
+.data-table {
     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
     border-collapse: collapse;
     width: 100%;
 }
 
-.agents-table td, .agents-table th {
+.data-table td, .data-table th {
     border: 1px solid #ddd;
     padding: 8px;
 }
 
-.agents-table tr:nth-child(even){background-color: #f2f2f2;}
+.data-table tr:nth-child(even){background-color: #f2f2f2;}
 
-.agents-table tr:hover {background-color: #ddd;}
+.data-table tr:hover {background-color: #ddd;}
 
-.agents-table th {
+.data-table th {
     padding-top: 12px;
     padding-bottom: 12px;
     text-align: left;
@@ -21,7 +21,7 @@
     color: white;
 }
 
-.agents-wrapper {
+.table-wrapper {
     width: 700px;
     margin: 22px 0 0 52px;
 }

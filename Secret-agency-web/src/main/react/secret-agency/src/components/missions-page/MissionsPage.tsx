@@ -28,8 +28,8 @@ export class MissionsPage extends React.Component<any, IMissionsState> {
                 </tr>
             );
             return (
-                <div className="agents-wrapper">
-                    <table className="agents-table">
+                <div className="table-wrapper">
+                    <table className="data-table">
                         <thead>
                         <tr>
                             <th>Name</th>

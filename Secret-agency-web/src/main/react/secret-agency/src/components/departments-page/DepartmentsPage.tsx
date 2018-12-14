@@ -31,8 +31,8 @@ export class DepartmentsPage extends React.Component<any, IDepartmentsState> {
                 </tr>
             );
             return (
-                <div className="agents-wrapper">
-                    <table className="agents-table">
+                <div className="table-wrapper">
+                    <table className="data-table">
                         <thead>
                         <tr>
                             <th>City</th>
