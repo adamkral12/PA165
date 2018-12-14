@@ -81,13 +81,13 @@ public class AgentsController {
         this.agentFacade.assignAgentToMission(agentId, missionId);
     }
 
-    @RequestMapping(value = "/assign/{agentId}/{missionId}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/remove/{agentId}/{missionId}", method = RequestMethod.PUT)
     public final void removeAgentFromMission(@PathVariable("agentId") Long agentId, @PathVariable("missionId") Long missionId) {
         logger.debug("rest remove agent {} to mission {}", agentId, missionId);
         this.agentFacade.removeAgentFromMission(agentId, missionId);
     }
 
-    @RequestMapping(value = "/assign/{agentId}/{departmentId}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/add/{agentId}/{departmentId}", method = RequestMethod.PUT)
     public final void addAgentToDepartment(@PathVariable("agentId") Long agentId, @PathVariable("departmentId") Long departmentId) {
         logger.debug("rest add agent {} to department {}", agentId, departmentId);
         this.agentFacade.addAgentToDepartment(agentId, departmentId);
