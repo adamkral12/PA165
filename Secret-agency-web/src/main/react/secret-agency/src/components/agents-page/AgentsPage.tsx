@@ -1,19 +1,25 @@
 import * as React from "react";
 import {getAllAgents} from "../../services/agentService";
+import {IAgent} from "../../types/Agent";
 
-export class AgentsPage extends React.Component<any, any> {
-    constructor(props) {
+interface IAgentsState {
+    agents: IAgent[]
+}
+
+export class AgentsPage extends React.Component<any, IAgentsState> {
+    constructor(props: any) {
         super(props);
 
         getAllAgents().then(
             response => {
-                this.setState({agents: response.data});
+                const agents = response.data as IAgent[];
+                this.setState({agents});
             }
         )
     }
 
     public render() {
-        if (this.state && this.state.agents !== null) {
+        if (this.state) {
             const tableRows = this.state.agents.map(agent =>
                 <tr key={agent.id}>
                     <td>{agent.name}</td>
