@@ -5,10 +5,12 @@ import {LoginPage} from "./components/LoginForm";
 import * as authenticationService from "./services/authenticationService";
 import * as secretAgencyRepository from "./repository/secretAgecyRepository";
 import {IAgent} from "./types/Agent";
+import {TopBar} from "./components/top-bar/TopBar"
 
 interface IAppState {
   loginError: string;
   authenticatedAgent: IAgent | null;
+  tabs: {};
 }
 
 type IState = IAppState;
@@ -63,6 +65,11 @@ class App extends React.Component<{}, IState> {
     this.state = {
       authenticatedAgent: null,
       loginError: "",
+      tabs: [
+          {title: "Agents", link: "agents"},
+          {title: "Missions", link: "missions"},
+          {title: "Departments", link: "departments"},
+      ]
     }
   }
 
@@ -87,13 +94,8 @@ class App extends React.Component<{}, IState> {
 
     return (
       <div className="App">
-        <header className="App-header">
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <button type={'button'} onClick={this.onLogout}>Log out</button>
+        <TopBar tabs={this.state.tabs} logout={this.onLogout}/>
+        <button className="logout-button" type={'button'} onClick={this.onLogout}>Log out</button>
       </div>
     );
   }
