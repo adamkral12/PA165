@@ -30,7 +30,6 @@ public class DepartmentsController {
 
     /**
      * Get list of Departments
-     * curl -i -X GET http://localhost:8080/pa165/rest/departments
      * @return DepartmentDTO
      */
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -42,14 +41,12 @@ public class DepartmentsController {
     /**
      *
      * Get Department by identifier id
-     * curl -i -X GET http://localhost:8080/pa165/rest/departments/1
-     *
      * @param id identifier for a department
      * @return DepartmentDTO
      * @throws ResourceNotFoundException
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public final DepartmentDTO getDepartment(@PathVariable("id") long id) throws ResourceNotFoundException {
+    public final DepartmentDTO getDepartment(@PathVariable("id") Long id) throws ResourceNotFoundException {
         logger.debug("rest getDepartment({})", id);
 
         try {
@@ -60,17 +57,28 @@ public class DepartmentsController {
     }
 
     /**
-     curl -X POST -i -H "Content-Type: application/json" --data \
-     '{ "city": "Ostrava", "country": "Czech Republic","longitude": 123213.32,"latitude": 123.231,"specialization": "ASSASSINATION"}'\
-     http://localhost:8080/pa165/rest/departments/
-     *
+     * TODO: ALL agents need to be deleted when deleting department, not sure how to behave in this case
+     * @param id department id
+     * @throws ResourceNotFoundException
+     */
+//    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+//    public final void deleteDepartment(@PathVariable("id") Long id) throws ResourceNotFoundException {
+//        logger.debug("rest deleteDepartment({})", id);
+//        try {
+//            departmentFacade.deleteDepartment(id);
+//        } catch (Exception ex) {
+//            throw new ResourceNotFoundException();
+//        }
+//    }
+
+    /**
      * @param department department to be created
      * @return DepartmentDTO created department
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public final DepartmentDTO createDepartment(@RequestBody DepartmentCreateDTO department) throws Exception {
+    public final DepartmentDTO createDepartment(@RequestBody DepartmentCreateDTO department) {
 
         logger.debug("rest createDepartment({})", department);
 
@@ -79,16 +87,14 @@ public class DepartmentsController {
     }
 
     /**
-     curl -X PUT -i -H "Content-Type: application/json" --data \
-     '{ "departmentId":1 ,"specialization": "ASSASSINATION"}'\
-     http://localhost:8080/pa165/rest/departments/specializations/
-     *
      * @param specialization department specialization
      * @return DepartmentDTO updated department
      */
     @RequestMapping(value = "/specializations", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public final DepartmentDTO changeDepartmentSpecialization(@RequestBody DepartmentUpdateSpecializationDTO specialization) {
+    public final DepartmentDTO changeDepartmentSpecialization(
+            @RequestBody DepartmentUpdateSpecializationDTO specialization
+    ) throws ResourceNotFoundException {
 
         logger.debug("rest update Department specialization({})", specialization);
 
@@ -101,7 +107,6 @@ public class DepartmentsController {
     }
 
     /**
-     * curl -i -X GET http://localhost:8080/pa165/rest/departments/specializations
      * @return All possible department specializations
      */
     @RequestMapping(value = "/specializations", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -111,7 +116,6 @@ public class DepartmentsController {
     }
 
     /**
-     * curl -i -X GET http://localhost:8080/pa165/rest/departments/specialization/ASSASSINATION
      * @return All departments with given specialization
      */
     @RequestMapping(
@@ -127,8 +131,7 @@ public class DepartmentsController {
     }
 
     /**
-     * curl -i -X GET http://localhost:8080/pa165/rest/departments/city/Czech Republic
-     * @return All possible department specializations
+     * @return get departments by city
      */
     @RequestMapping(value = "/city/{city}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public final List<DepartmentDTO> getDepartmentsByCity(
@@ -139,8 +142,7 @@ public class DepartmentsController {
     }
 
     /**
-     * curl -i -X GET http://localhost:8080/pa165/rest/departments/country/Prague
-     * @return All possible department specializations
+     * @return get departments by country
      */
     @RequestMapping(value = "/country/{country}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public final List<DepartmentDTO> getDepartmentsByCountry(
@@ -151,8 +153,7 @@ public class DepartmentsController {
     }
 
     /**
-     * curl -i -X GET http://localhost:8080/pa165/rest/departments/area/50.08804/14.4207/20
-     * @return All possible department specializations
+     * @return get departments by city area and distance
      */
     @RequestMapping(value = "/area/{latitude}/{longitude}/{distance}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public final List<DepartmentDTO> getDepartmentsByArea(
