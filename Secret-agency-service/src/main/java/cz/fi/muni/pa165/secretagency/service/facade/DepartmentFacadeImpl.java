@@ -52,6 +52,11 @@ public class DepartmentFacadeImpl implements DepartmentFacade {
     }
 
     @Override
+    public DepartmentSpecialization[] getSpecializations() {
+        return DepartmentSpecialization.values();
+    }
+
+    @Override
     public void deleteDepartment(Long departmentId) {
         departmentService.deleteEntityById(departmentId);
     }

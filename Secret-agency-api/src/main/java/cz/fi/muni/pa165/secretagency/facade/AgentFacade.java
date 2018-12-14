@@ -41,6 +41,12 @@ public interface AgentFacade {
     void deleteAgent(Long id);
 
     /**
+     * Get all ranks
+     * @return all ranks
+     */
+    AgentRankEnum[] getAgentRanks();
+
+    /**
      * Get all agents by a given rank
      * @param rankEnum given rank
      * @return List of all agents with given rank

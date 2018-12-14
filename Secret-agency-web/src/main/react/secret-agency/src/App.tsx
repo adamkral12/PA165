@@ -6,6 +6,9 @@ import * as authenticationService from "./services/authenticationService";
 import * as secretAgencyRepository from "./repository/secretAgecyRepository";
 import {IAgent} from "./types/Agent";
 import {TopBar} from "./components/top-bar/TopBar"
+import {getAllAgents} from "./services/agentService";
+import {AgentsPage} from "./components/agents-page/AgentsPage";
+import { Route, BrowserRouter } from 'react-router-dom';
 
 interface IAppState {
   loginError: string;
@@ -38,6 +41,11 @@ class App extends React.Component<{}, IState> {
           // put authenticated user to state and local storage (to enable automatic authentication)
           this.setState((prevState) => ({...prevState, authenticatedAgent: response}));
           secretAgencyRepository.storeAuthenticatedAgent(response);
+          getAllAgents().then(
+              agents => {
+                console.log(agents);
+              }
+          )
         }
       })
   };
@@ -96,6 +104,9 @@ class App extends React.Component<{}, IState> {
       <div className="App">
         <TopBar tabs={this.state.tabs} logout={this.onLogout}/>
         <button className="logout-button" type={'button'} onClick={this.onLogout}>Log out</button>
+        <BrowserRouter>
+            <Route path="/agents" component={AgentsPage}/>
+        </BrowserRouter>
       </div>
     );
   }

@@ -9,4 +9,5 @@ export interface IAgent {
   // private DepartmentDTO department;
   readonly missionIds: number[];
   readonly reportIds: number[];
+  readonly rank: string;
 }
