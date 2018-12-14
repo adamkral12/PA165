@@ -1,0 +1,27 @@
+.agents-table {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.agents-table td, .agents-table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.agents-table tr:nth-child(even){background-color: #f2f2f2;}
+
+.agents-table tr:hover {background-color: #ddd;}
+
+.agents-table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #154270;
+    color: white;
+}
+
+.agents-wrapper {
+    width: 700px;
+    margin: 22px 0 0 52px;
+}
