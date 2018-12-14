@@ -1,4 +1,5 @@
 import * as React from "react";
+import "../SharedStyles.css";
 import {getAllAgents} from "../../services/agentService";
 import {IAgent} from "../../types/Agent";
 
@@ -29,8 +30,8 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
                 </tr>
             );
             return (
-                <div>
-                    <table>
+                <div className="agents-wrapper">
+                    <table className="agents-table">
                         <thead>
                             <tr>
                                 <th>Name</th>

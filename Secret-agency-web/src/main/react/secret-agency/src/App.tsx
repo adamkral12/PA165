@@ -8,6 +8,7 @@ import {IAgent} from "./types/Agent";
 import {TopBar} from "./components/top-bar/TopBar"
 import {AgentsPage} from "./components/agents-page/AgentsPage";
 import { Route, BrowserRouter } from "react-router-dom";
+import {DepartmentsPage} from "./components/departments-page/DepartmentsPage";
 
 export interface ITab {
     title: string,
@@ -105,6 +106,9 @@ class App extends React.Component<{}, IState> {
                 <button className="logout-button" type={'button'} onClick={this.onLogout}>Log out</button>
                 <BrowserRouter>
                     <Route path="/agents" component={AgentsPage}/>
+                </BrowserRouter>
+                <BrowserRouter>
+                    <Route path="/departments" component={DepartmentsPage}/>
                 </BrowserRouter>
             </div>
         );
