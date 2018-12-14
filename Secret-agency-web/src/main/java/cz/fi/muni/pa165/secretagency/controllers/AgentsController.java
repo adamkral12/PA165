@@ -3,16 +3,24 @@ package cz.fi.muni.pa165.secretagency.controllers;
 import cz.fi.muni.pa165.secretagency.ApiUris;
 import cz.fi.muni.pa165.secretagency.dto.AgentCreateDTO;
 import cz.fi.muni.pa165.secretagency.dto.AgentDTO;
+import cz.fi.muni.pa165.secretagency.dto.MissionDTO;
+import cz.fi.muni.pa165.secretagency.dto.ReportDTO;
+import cz.fi.muni.pa165.secretagency.entity.Agent;
 import cz.fi.muni.pa165.secretagency.enums.AgentRankEnum;
 import cz.fi.muni.pa165.secretagency.enums.LanguageEnum;
 import cz.fi.muni.pa165.secretagency.exceptions.ResourceNotFoundException;
 import cz.fi.muni.pa165.secretagency.facade.AgentFacade;
+import cz.fi.muni.pa165.secretagency.facade.MissionFacade;
+import cz.fi.muni.pa165.secretagency.facade.ReportFacade;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -26,6 +34,8 @@ public class AgentsController {
 
     @Autowired
     private AgentFacade agentFacade;
+    private ReportFacade reportFacade;
+    private MissionFacade missionFacade;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public final List<AgentDTO> getAgents() {
@@ -52,9 +62,22 @@ public class AgentsController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public final void deleteAgent(@PathVariable("id") Long id) {
+    public final ResponseEntity deleteAgent(@PathVariable("id") Long id) {
         logger.debug("rest deleteAgent({})", id);
+        List<MissionDTO> missionDTOS = this.missionFacade.getAllMissions();
+        for (MissionDTO mission: missionDTOS) {
+            if (mission.getAgentIds().contains(id)) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }
+        List<ReportDTO> reportDTOS = this.reportFacade.getAllReports();
+        for (ReportDTO report: reportDTOS) {
+            if (report.getAgentDTO().getId().equals(id)) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }
         this.agentFacade.deleteAgent(id);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/ranks", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
