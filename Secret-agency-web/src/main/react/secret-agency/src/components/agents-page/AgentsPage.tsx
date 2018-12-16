@@ -1,32 +1,97 @@
 import * as React from "react";
 import "../SharedStyles.css";
-import {getAllAgents} from "../../services/agentService";
+import "./AgentsPage.css"
+import {getAgentRanks, getAllAgents, getAllLanguages} from "../../services/agentService";
 import {IAgent} from "../../types/Agent";
 
 interface IAgentsState {
-    agents: IAgent[]
+    readonly agents: IAgent[]
+    readonly newAgent: INewAgent
+    readonly ranks: string[]
+    readonly languages: string[]
+}
+
+export interface INewAgent {
+    name: string,
+    birthDate: string,
+    languages: string[],
+    rank: string
+    id: number,
 }
 
 export class AgentsPage extends React.Component<any, IAgentsState> {
     constructor(props: any) {
         super(props);
+        this.loadData();
+    }
 
+    private loadData() {
         getAllAgents().then(
             response => {
                 const agents = response.data as IAgent[];
-                this.setState({agents});
+                const newAgent = {
+                    name: "",
+                    birthDate: "",
+                    languages: [],
+                    rank: "",
+                    id: 1,
+                };
+                this.setState({
+                    agents,
+                    newAgent
+                });
             }
-        )
+        );
+        getAgentRanks().then(
+            response => {
+                const ranks = response.data as string[];
+                this.setState({ranks});
+            }
+        );
+        getAllLanguages().then(
+            response => {
+                const languages = response.data as string[];
+                this.setState({languages});
+            }
+        );
+    }
+
+    private editAgent(id: number) {
+        this.state.agents.forEach(agent => {
+            if (agent.id === id) {
+                const newAgent = {
+                    name: agent.name,
+                    birthDate: agent.birthDate.toString(),
+                    languages: agent.languages,
+                    rank: agent.rank,
+                    id: agent.id,
+                };
+                this.setState({
+                    newAgent
+                });
+            }
+        });
+    }
+
+    private updateNewAgent(value: string, prop: string) {
+        this.state.newAgent[prop] = value;
+    }
+
+    private saveEditedAgent() {
+        console.log(this.state.newAgent);
     }
 
     public render() {
-        if (this.state) {
+        if (this.state && this.state.agents && this.state.languages && this.state.ranks) {
             const tableRows = this.state.agents.map(agent =>
                 <tr key={agent.id}>
                     <td>{agent.name}</td>
                     <td>{agent.birthDate}</td>
                     <td>{agent.languages}</td>
                     <td>{agent.rank}</td>
+                    <td>
+                        <button className="btn btn-primary edit-button" onClick={() => this.editAgent(agent.id)}>Edit</button>
+                    </td>
                 </tr>
             );
             return (
@@ -38,10 +103,39 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
                                 <th>Birth Date</th>
                                 <th>Languages</th>
                                 <th>Rank</th>
+                                <th className="table-row-width">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             {tableRows}
+                            <tr>
+                                <td><input type="text" defaultValue={this.state.newAgent.name} onChange={(evt) => this.updateNewAgent(evt.target.value, "name")}/></td>
+                                <td><input type="text" defaultValue={this.state.newAgent.birthDate} onChange={(evt) => this.updateNewAgent(evt.target.value, "birthDate")}/></td>
+                                <td>
+                                    <select value={this.state.newAgent.languages[0]} onChange={(evt) => this.updateNewAgent(evt.target.value, "languages")}
+                                    >
+                                        <option value={""}/>
+                                        {this.state.languages.map((language: string) =>
+                                            <option key={language}
+                                                    value={language}>{language}</option>
+                                        )}
+                                    </select>
+                                </td>
+                                <td>
+                                    <select value={this.state.newAgent.rank} onChange={(evt) => this.updateNewAgent(evt.target.value, "rank")}
+                                    >
+                                        <option value={""}/>
+                                        {this.state.ranks.map((rank: string) =>
+                                            <option key={rank}
+                                                    value={rank}>{rank}</option>
+                                        )}
+                                    </select>
+                                </td>
+                                <td>
+                                    <button className={"btn btn-primary save-button"} onClick={() => this.saveEditedAgent()}>Save</button>
+                                    <button className={"btn btn-info cancel-button"}>Cancel</button>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

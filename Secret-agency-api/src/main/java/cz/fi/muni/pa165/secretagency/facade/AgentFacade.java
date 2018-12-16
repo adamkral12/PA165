@@ -47,6 +47,12 @@ public interface AgentFacade {
     AgentRankEnum[] getAgentRanks();
 
     /**
+     * Get all possible languages
+     * @return all languages
+     */
+    LanguageEnum[] getAllLanguages();
+
+    /**
      * Get all agents by a given rank
      * @param rankEnum given rank
      * @return List of all agents with given rank

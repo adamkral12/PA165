@@ -69,6 +69,11 @@ public class AgentFacadeImpl implements AgentFacade {
     }
 
     @Override
+    public LanguageEnum[] getAllLanguages() {
+        return LanguageEnum.values();
+    }
+
+    @Override
     public List<AgentDTO> getAgentsByRank(AgentRankEnum rankEnum) {
         return beanMappingService.mapTo(agentService.getAgentsByRank(rankEnum), AgentDTO.class);
     }

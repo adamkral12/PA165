@@ -1,0 +1,15 @@
+.table-row-width {
+    min-width: 170px;
+}
+
+.edit-button {
+    margin-left: 7px;
+}
+
+.save-button {
+    margin-left: 5px;
+}
+
+.cancel-button {
+    margin-left: 13px;
+}
