@@ -4,7 +4,6 @@ import {IDepartment} from "../types/Department";
 export function getAllDepartments(): Promise<IDepartment[]> {
     return GET(`${REST_URL_BASE}/departments`).then(
         response => {
-            console.log(response.data);
             return response.data as IDepartment[];
         }
     )

@@ -4,8 +4,14 @@ import {ITab} from "../../App";
 import {NavLink} from "react-router-dom";
 
 export function TopBar(props: any) {
+    let activeTab = "";
+    props.tabs.forEach((tab: ITab) => {
+        if (window.location.href.includes(tab.link)) {
+            activeTab = tab.title;
+        }
+    });
     const tabs = props.tabs.map((tab: ITab, index: number) =>
-        <li key={index}>
+        <li key={index} className={tab.title === activeTab ? "active-tab" : ""}>
             <NavLink to={tab.link}>
                 {tab.title}
             </NavLink>
