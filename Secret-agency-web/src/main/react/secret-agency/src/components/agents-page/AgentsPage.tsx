@@ -16,8 +16,9 @@ export interface INewAgent {
     name: string,
     birthDate: string,
     languages: string[],
-    rank: string
+    rank: string,
     id: number,
+    codeName: string
 }
 
 export class AgentsPage extends React.Component<any, IAgentsState> {
@@ -39,6 +40,7 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
                     languages: [],
                     rank: "",
                     id: 1,
+                    codeName: ""
                 };
                 this.setState({
                     agents,
@@ -83,10 +85,15 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
     }
 
     private updateNewAgent(value: string, prop: string) {
+        if (prop === "languages") {
+            this.state.newAgent.languages = value.split(",");
+            return;
+        }
         this.state.newAgent[prop] = value;
     }
 
     private saveEditedAgent() {
+        if (!this.isEditValid()) { return; }
         editAgent(this.state.newAgent).then(
             editedAgent => {
                 const agents = this.state.agents;
@@ -103,6 +110,19 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
         );
     }
 
+    private isEditValid(): boolean {
+        if (!/([0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9])$/.test(this.state.newAgent.birthDate)) {
+            return false;
+        }
+        let isValid = true;
+        this.state.newAgent.languages.forEach(language => {
+            if (this.state.languages.indexOf(language) === -1) {
+                isValid = false;
+            }
+        });
+        return isValid;
+    }
+
     private clearEditRow() {
         const newAgent = {
             name: "",
@@ -110,6 +130,7 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
             languages: [],
             rank: "",
             id: 1,
+            codeName: ""
         };
         this.setState({
             newAgent,
@@ -123,8 +144,9 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
                 <tr key={agent.id}>
                     <td>{agent.name}</td>
                     <td>{agent.birthDate}</td>
-                    <td>{agent.languages}</td>
+                    <td>{agent.languages.join(", ")}</td>
                     <td>{agent.rank}</td>
+                    <td>{agent.codeName}</td>
                     <td>
                         <button className="btn btn-primary edit-button" onClick={() => this.editAgent(agent.id)}>Edit</button>
                     </td>
@@ -134,12 +156,13 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
                 <div className="table-wrapper">
                     <table className="data-table">
                         <thead>
-                            <tr>
+                            <tr className="table-row-width">
                                 <th>Name</th>
                                 <th>Birth Date</th>
                                 <th>Languages</th>
                                 <th>Rank</th>
-                                <th className="table-row-width">Action</th>
+                                <th>Code Name</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -148,16 +171,7 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
                                 <tr key={this.state.newAgent.id}>
                                     <td><input type="text" defaultValue={this.state.newAgent.name} onChange={(evt) => this.updateNewAgent(evt.target.value, "name")}/></td>
                                     <td><input type="text" defaultValue={this.state.newAgent.birthDate} onChange={(evt) => this.updateNewAgent(evt.target.value, "birthDate")}/></td>
-                                    <td>
-                                        <select defaultValue={this.state.newAgent.languages[0] ? this.state.newAgent.languages[0] : ""} onChange={(evt) => this.updateNewAgent(evt.target.value, "languages")}
-                                        >
-                                            <option value={""}/>
-                                            {this.state.languages.map((language: string) =>
-                                                <option key={language}
-                                                        value={language}>{language}</option>
-                                            )}
-                                        </select>
-                                    </td>
+                                    <td><input type="text" defaultValue={this.state.newAgent.languages.join(",")} onChange={(evt) => this.updateNewAgent(evt.target.value, "languages")}/></td>
                                     <td>
                                         <select defaultValue={this.state.newAgent.rank} onChange={(evt) => this.updateNewAgent(evt.target.value, "rank")}
                                         >
@@ -168,6 +182,7 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
                                             )}
                                         </select>
                                     </td>
+                                    <td><input type="text" defaultValue={this.state.newAgent.codeName} onChange={(evt) => this.updateNewAgent(evt.target.value, "codeName")}/></td>
                                     <td>
                                         <button className={"btn btn-primary save-button"} onClick={() => this.saveEditedAgent()}>Save</button>
                                         <button className={"btn btn-info cancel-button"} onClick={() => this.clearEditRow()}>Cancel</button>

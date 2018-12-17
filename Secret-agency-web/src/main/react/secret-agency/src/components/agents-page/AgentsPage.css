@@ -1,5 +1,5 @@
-.table-row-width {
-    min-width: 170px;
+.table-row-width th {
+    min-width: 190px;
 }
 
 .edit-button {
