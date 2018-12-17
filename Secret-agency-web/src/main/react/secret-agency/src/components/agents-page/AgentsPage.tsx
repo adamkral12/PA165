@@ -29,6 +29,7 @@ export interface INewAgent {
     readonly rank: string;
     readonly id: number;
     readonly codeName: string;
+    readonly departmentId: number;
 }
 
 export class AgentsPage extends React.Component<any, IAgentsState> {
@@ -50,7 +51,8 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
             languages: [],
             rank: "",
             id: 1,
-            codeName: ""
+            codeName: "",
+            departmentId: 1,
         };
 
 
@@ -86,8 +88,8 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
         });
     }
 
-    private updateNewAgent(value: string | ISelectOption | ISelectOption[] | undefined | null, prop: string) {
-        if (typeof value === 'string') {
+    private updateNewAgent(value: string| number | ISelectOption | ISelectOption[] | undefined | null, prop: string) {
+        if (typeof value === 'string' || typeof value === 'number') {
             this.state.newAgent[prop] = value;
         } else if (value !== undefined && value !== null) {
             if (Array.isArray(value)) {
@@ -156,7 +158,8 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
             languages: [],
             rank: "",
             id: 1,
-            codeName: ""
+            codeName: "",
+            departmentId: 1,
         };
         this.setState({
             newAgent,
@@ -173,6 +176,7 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
                     <td>{agent.languages.join(", ")}</td>
                     <td>{agent.rank}</td>
                     <td>{agent.codeName}</td>
+                    <td>{`${agent.department.city} - ${agent.department.specialization}`}</td>
                     <td>
                         {defineAbility().can("edit", 'Agent') && <button className="btn btn-primary edit-button" onClick={() => this.editAgent(agent.id)}>Edit</button>}
                     </td>
@@ -194,6 +198,7 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
                                 <th>Languages</th>
                                 <th>Rank</th>
                                 <th>Code Name</th>
+                                <th>Department</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -226,6 +231,15 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
                                         </select>
                                     </td>
                                     <td><input type="text" defaultValue={this.state.newAgent.codeName} onChange={(evt) => this.updateNewAgent(evt.target.value, "codeName")}/></td>
+                                    <td>
+                                        <select defaultValue={this.state.newAgent.departmentId.toString()} onChange={(evt) => this.updateNewAgent(evt.target.value, "departmentId")}
+                                        >
+                                            {this.state.departments.map((department: IDepartment) =>
+                                                <option key={department.id}
+                                                        value={department.id}>{department.city} - {department.specialization}</option>
+                                            )}
+                                        </select>
+                                    </td>
                                     <td>
                                         <button className={"btn btn-primary save-button"} onClick={() => this.saveEditedAgent()}>Save</button>
                                         <button className={"btn btn-info cancel-button"} onClick={() => this.clearEditRow()}>Cancel</button>
