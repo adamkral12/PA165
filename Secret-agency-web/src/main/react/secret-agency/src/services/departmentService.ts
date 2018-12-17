@@ -1,13 +1,13 @@
 import {GET, POST, PUT, REST_URL_BASE} from "../utils/requestUtils";
 import {IDepartment} from "../types/Department";
 
-export function getAllDepartments(): Promise<IDepartment[]> {
+export const getAllDepartments = (): Promise<IDepartment[]> => {
     return GET(`${REST_URL_BASE}/departments`).then(
         response => {
             return response.data as IDepartment[];
         }
     )
-}
+};
 
 export const createDepartment = (data: IDepartment): Promise<IDepartment> => (
     POST(`${REST_URL_BASE}/departments`, data).then(

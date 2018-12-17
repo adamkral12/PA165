@@ -5,11 +5,12 @@ import {editAgent, getAgentRanks, getAllAgents, getAllLanguages} from "../../ser
 import {IAgent} from "../../types/Agent";
 
 interface IAgentsState {
-    readonly agents: IAgent[]
-    readonly newAgent: INewAgent
-    readonly ranks: string[]
-    readonly languages: string[]
-    readonly edit: boolean
+    readonly agents: IAgent[];
+    readonly newAgent: INewAgent;
+    readonly ranks: string[];
+    readonly languages: string[];
+    readonly edit: boolean;
+    readonly formErrors: string[];
 }
 
 export interface INewAgent {
@@ -22,45 +23,34 @@ export interface INewAgent {
 }
 
 export class AgentsPage extends React.Component<any, IAgentsState> {
-    constructor(props: any) {
-        super(props);
-    }
-
-    public componentDidMount() {
+    public async componentDidMount() {
         this.loadData();
     }
 
-    private loadData() {
-        getAllAgents().then(
-            response => {
-                const agents = response.data as IAgent[];
-                const newAgent = {
-                    name: "",
-                    birthDate: "",
-                    languages: [],
-                    rank: "",
-                    id: 1,
-                    codeName: ""
-                };
-                this.setState({
-                    agents,
-                    newAgent,
-                    edit: false
-                });
-            }
-        );
-        getAgentRanks().then(
-            response => {
-                const ranks = response.data as string[];
-                this.setState({ranks});
-            }
-        );
-        getAllLanguages().then(
-            response => {
-                const languages = response.data as string[];
-                this.setState({languages});
-            }
-        );
+    private async loadData() {
+        // get async data
+        const agents = await getAllAgents();
+        const ranks = await getAgentRanks();
+        const languages = await getAllLanguages();
+
+        // set default properties
+        const newAgent = {
+            name: "",
+            birthDate: "",
+            languages: [],
+            rank: "",
+            id: 1,
+            codeName: ""
+        };
+
+        this.setState(_ => ({
+            agents,
+            newAgent,
+            edit: false,
+            ranks,
+            languages,
+            formErrors: [],
+        }));
     }
 
     private editAgent(id: number) {
@@ -94,36 +84,39 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
     }
 
     private saveEditedAgent() {
-        if (!this.isEditValid()) { return; }
-        console.log(this.state.newAgent);
-        editAgent(this.state.newAgent).then(
-            editedAgent => {
-                const agents = this.state.agents;
-                agents.forEach((agent, index) => {
-                    if (agent.id === editedAgent.id) {
-                        agents[index] = editedAgent;
-                    }
-                });
-                this.setState({agents});
-                this.clearEditRow();
-            }, () => {
-                this.clearEditRow();
-            }
-        );
+        if (this.validate().length > 0) {
+            this.setState(_ => ({formErrors: this.validate()}));
+        } else {
+            editAgent(this.state.newAgent).then(
+                editedAgent => {
+                    const agents = this.state.agents;
+                    agents.forEach((agent, index) => {
+                        if (agent.id === editedAgent.id) {
+                            agents[index] = editedAgent;
+                        }
+                    });
+                    this.setState({agents});
+                    this.clearEditRow();
+                }, () => {
+                    this.clearEditRow();
+                }
+            );
+        }
     }
 
-    private isEditValid(): boolean {
+    private validate = (): string[] => {
+        const errors = [];
         if (!/([0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9])$/.test(this.state.newAgent.birthDate)) {
-            return false;
+            errors.push("Invalid date format");
         }
-        let isValid = true;
+
         this.state.newAgent.languages.forEach(language => {
             if (this.state.languages.indexOf(language) === -1) {
-                isValid = false;
+                errors.push("Invalid language " + language);
             }
         });
-        return isValid;
-    }
+        return errors
+    };
 
     private clearEditRow() {
         const newAgent = {
@@ -141,7 +134,7 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
     }
 
     public render() {
-        if (this.state && this.state.agents && this.state.languages && this.state.ranks) {
+        if (this.state) {
             const tableRows = this.state.agents.map(agent =>
                 <tr key={agent.id}>
                     <td>{agent.name}</td>
@@ -156,6 +149,11 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
             );
             return (
                 <div className="table-wrapper">
+                    {this.state.formErrors.length > 0 && <div className={'alert alert-danger'}>
+                        {this.state.formErrors.map((error: string, index) =>
+                            <p key={index}>{error}</p>
+                        )}
+                    </div>}
                     <table className="data-table">
                         <thead>
                             <tr className="table-row-width">
@@ -177,7 +175,6 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
                                     <td>
                                         <select defaultValue={this.state.newAgent.rank} onChange={(evt) => this.updateNewAgent(evt.target.value, "rank")}
                                         >
-                                            <option value={""}/>
                                             {this.state.ranks.map((rank: string) =>
                                                 <option key={rank}
                                                         value={rank}>{rank}</option>
