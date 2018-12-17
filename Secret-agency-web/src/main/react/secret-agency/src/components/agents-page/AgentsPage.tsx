@@ -5,6 +5,9 @@ import {editAgent, getAgentRanks, getAllAgents, getAllLanguages} from "../../ser
 import {IAgent} from "../../types/Agent";
 import Select from 'react-select';
 import {ISelectOption, mapOptionsForSelect, mapValuesFromSelect} from "../../utils/SelectionOption";
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
+import * as moment from 'moment';
 
 interface IAgentsState {
     readonly agents: IAgent[];
@@ -88,6 +91,14 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
             }
         }
     }
+
+    private updateBirthDate = (date: Date | null): void => {
+        if (date !== null) {
+            this.setState(prevState => ({
+                newAgent: {...prevState.newAgent, birthDate: moment(date).format('YYYY-MM-DD')}
+            }));
+        }
+    };
 
     private saveEditedAgent() {
         if (this.validate().length > 0) {
@@ -185,10 +196,15 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
                             {this.state.edit && (
                                 <tr key={this.state.newAgent.id}>
                                     <td><input type="text" defaultValue={this.state.newAgent.name} onChange={(evt) => this.updateNewAgent(evt.target.value, "name")}/></td>
-                                    <td><input type="text" defaultValue={this.state.newAgent.birthDate} onChange={(evt) => this.updateNewAgent(evt.target.value, "birthDate")}/></td>
+                                    <td>
+                                        <DatePicker
+                                            value={this.state.newAgent.birthDate}
+                                            onChange={this.updateBirthDate}
+                                        />
+                                    </td>
                                     <td>
                                         <Select
-                                            isMulti={true}
+                                            isMulti
                                             options={mapOptionsForSelect(this.state.languages)}
                                             value={mapOptionsForSelect(this.state.newAgent.languages)}
                                             onChange={(options) => this.updateNewAgent(options, "languages")}
