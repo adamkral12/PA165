@@ -1,3 +1,5 @@
+import {IDepartment} from "./Department";
+
 export interface IAgent {
   readonly id: number;
   readonly name: string;
@@ -6,7 +8,7 @@ export interface IAgent {
   // private AgentRankEnum rank;
   readonly codeName: string;
   readonly passwordHash: string;
-  // private DepartmentDTO department;
+  readonly department: IDepartment;
   readonly missionIds: number[];
   readonly reportIds: number[];
   readonly rank: Rank;
