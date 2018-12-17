@@ -8,6 +8,7 @@ import {Alert, Button, FormControl, FormGroup} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import {ROUTING_URL_BASE} from "../../utils/requestUtils";
 import {AlertCloseable} from "../alert-closeable/AlertCloseable";
+import {IAgent} from "../../types/Agent";
 
 // easiest way, how to add image to page
 const topSecretImgSrc = "https://vignette.wikia.nocookie.net/uncyclopedia/images/2/25/Top_Secret_Stamp.png" +
@@ -20,6 +21,7 @@ interface IReportDetailState {
     readonly submitError: string;
     readonly serverError: string;
     readonly wasSaved: boolean;
+    readonly mentionedAgentsInReport: IAgent[] | null;
 }
 
 type IProps = RouteComponentProps<{reportId: string}>;
@@ -42,6 +44,19 @@ export class ReportDetail extends React.PureComponent<IProps, IState> {
         this.setState(prevState => ({...prevState, text , submitError: ""}));
     };
 
+    private onFindMentionedAgents = async () => {
+        // already run
+        if (this.state.mentionedAgentsInReport != null) {
+            return;
+        }
+        const response = await reportService.getAgentsMentionedInReport(this.displayedReport.id);
+        if (typeof response === "string") {
+            this.setState(prevState => ({...prevState, serverError: response}));
+            return;
+        }
+
+        this.setState(prevState => ({...prevState, mentionedAgentsInReport: response}));
+    };
 
     private onSaveClicked = async (): Promise<void> => {
         if (this.state.text.trim().length < 10) {
@@ -87,6 +102,7 @@ export class ReportDetail extends React.PureComponent<IProps, IState> {
             submitError: "",
             serverError: "",
             wasSaved: false,
+            mentionedAgentsInReport: null,
         }
     }
 
@@ -102,6 +118,20 @@ export class ReportDetail extends React.PureComponent<IProps, IState> {
         }
         this.displayedReport = response;
         this.setState(prevState => ({...prevState, text: response.text, isLoading: false}));
+    }
+
+    private getFindAgentsResult(): null | JSX.Element |JSX.Element[] {
+        if (this.state.mentionedAgentsInReport == null) {
+            return null;
+        }
+
+        if (this.state.mentionedAgentsInReport.length === 0) {
+            return <Alert bsStyle={"info"}>No agents found</Alert>;
+        }
+
+        return this.state.mentionedAgentsInReport.map((agent) => (
+            <div className={"ReportDetail__findAgentsResult"} key={agent.id}>{agent.codeName}</div>
+        ));
     }
 
     /********************************************************
@@ -151,9 +181,16 @@ export class ReportDetail extends React.PureComponent<IProps, IState> {
                     </div>
                     <img title={'Top-secret'} src={topSecretImgSrc} alt={'Top secret logo'} className={"ReportDetail__img"}/>
                 </div>
-                <div>Text: {textComponent}</div>
+                <div className={"ReportDetail__textWrapper"}>Text: {textComponent}</div>
                 {this.state.wasSaved && <p className={"text-success"}>Report was successfully updated</p>}
                 {this.isEditingMode() && <Button bsStyle={"primary"} onClick={this.onSaveClicked}>Save</Button>}
+                {this.getFindAgentsResult()}
+                {!this.isEditingMode() && (
+                    <Button className={"ReportDetail__findAgentsButton"}
+                            bsStyle={"warning"} onClick={this.onFindMentionedAgents}>
+                        Find mentioned agents
+                    </Button>
+                )}
             </div>
         )
     }

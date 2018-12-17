@@ -20,3 +20,7 @@
 .ReportDetail__img {
     margin-right: 100px;
 }
+
+.ReportDetail__textWrapper {
+    margin-bottom: 10px;
+}

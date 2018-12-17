@@ -7,7 +7,7 @@ import * as secretAgencyRepository from "./repository/secretAgecyRepository";
 import {IAgent} from "./types/Agent";
 import {TopBar} from "./components/top-bar/TopBar"
 import {AgentsPage} from "./components/agents-page/AgentsPage";
-import {BrowserRouter, Route} from "react-router-dom";
+import {BrowserRouter, Redirect, Route} from "react-router-dom";
 import {DepartmentsPage} from "./components/departments-page/DepartmentsPage";
 import {ROUTING_URL_BASE} from "./utils/requestUtils";
 import {ReportsPage} from "./components/reports-page/ReportsPage";
@@ -152,6 +152,7 @@ class App extends React.Component<{}, IState> {
                         )} />
                         <Route path={`${ROUTING_URL_BASE}/reports/report/:reportId`} component={ReportDetail}/>
                     </div>
+                    <Redirect to={`${ROUTING_URL_BASE}/reports`}/>
                 </div>
             </BrowserRouter>
         );

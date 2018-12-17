@@ -1,6 +1,7 @@
 import {IReport, IReportCreate, IReportUpdate} from "../types/Report";
 import {DELETE, GET, POST, PUT, REST_URL_BASE} from "../utils/requestUtils";
 import {AxiosError} from "axios";
+import {IAgent} from "../types/Agent";
 
 
 export function getAllReports(): Promise<IReport[]> {
@@ -101,8 +102,17 @@ export function getReportsWithResult(result: string): Promise<IReport[] | string
 }
 
 // /reportStatus/{reportStatus}
-export function getreportsWithStatus(status: string,): Promise<IReport[] | string> {
+export function getReportsWithStatus(status: string,): Promise<IReport[] | string> {
     return GET<IReport[]>(`${REST_URL_BASE}/reports/reportStatus/${status}`).then((response) => {
+        return response.data;
+    }).catch((error: AxiosError) => {
+        return error.response ? error.response.data.message : error.message;
+    });
+}
+
+// /report/{reportId}/mentionedAgents
+export function getAgentsMentionedInReport(reportId: number): Promise<IAgent[] | string> {
+    return GET<IReport[]>(`${REST_URL_BASE}/reports/report/${reportId}/mentionedAgents`).then((response) => {
         return response.data;
     }).catch((error: AxiosError) => {
         return error.response ? error.response.data.message : error.message;

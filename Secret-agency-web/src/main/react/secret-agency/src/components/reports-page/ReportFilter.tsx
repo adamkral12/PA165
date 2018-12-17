@@ -91,7 +91,7 @@ export class ReportFilter extends React.PureComponent<IProps, IState> {
                 result = await reportService.getAllReports();
                 break;
             case SEARCH_BY_STATUS:
-                result = await reportService.getreportsWithStatus(this.state.reportStatus);
+                result = await reportService.getReportsWithStatus(this.state.reportStatus);
                 break;
             case SEARCH_BY_RESULT:
                 result = await reportService.getReportsWithResult(this.state.reportResult);

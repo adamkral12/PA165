@@ -161,7 +161,9 @@ export class ReportsPage extends React.PureComponent<IProps, IState> {
         // authenticated agent is not admin or Report author
         return (
             <div className={'ReportsPage__actions'}>
-                <Button bsStyle={'info'}>View</Button>
+                <span className={"icon-operation"} onClick={() => this.onShowDetail(report.id)}>
+                    <FontAwesomeIcon icon={faSearch} size={"2x"} />
+                </span>
             </div>
         );
     }
