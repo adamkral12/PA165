@@ -95,7 +95,7 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
                             agents[index] = editedAgent;
                         }
                     });
-                    this.setState({agents});
+                    this.setState({agents, formErrors: []});
                     this.clearEditRow();
                 }, () => {
                     this.clearEditRow();
@@ -108,6 +108,14 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
         const errors = [];
         if (!/([0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9])$/.test(this.state.newAgent.birthDate)) {
             errors.push("Invalid date format");
+        }
+
+        if (!this.state.newAgent.name.trim()) {
+            errors.push("Name cannot be empty");
+        }
+
+        if (!this.state.newAgent.codeName.trim()) {
+            errors.push("Code name cannot be empty");
         }
 
         this.state.newAgent.languages.forEach(language => {
