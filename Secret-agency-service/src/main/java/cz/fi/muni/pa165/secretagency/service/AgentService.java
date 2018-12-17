@@ -37,6 +37,13 @@ public interface AgentService extends GenericService<Agent> {
     List<Agent> getAgentsByRank(AgentRankEnum rankEnum);
 
     /**
+     * update agent
+     * @param agent updated
+     * @return updated agent
+     */
+    Agent updateAgent(Agent agent);
+
+    /**
      * Agent with given code name
      * @param codename agent's codename
      * @return agent with given codename

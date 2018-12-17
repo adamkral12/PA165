@@ -2,6 +2,8 @@ package cz.fi.muni.pa165.secretagency.controllers;
 
 import cz.fi.muni.pa165.secretagency.ApiUris;
 import cz.fi.muni.pa165.secretagency.dto.AgentDTO;
+import cz.fi.muni.pa165.secretagency.dto.AgentUpdateDTO;
+import cz.fi.muni.pa165.secretagency.entity.Agent;
 import cz.fi.muni.pa165.secretagency.enums.AgentRankEnum;
 import cz.fi.muni.pa165.secretagency.enums.LanguageEnum;
 import cz.fi.muni.pa165.secretagency.exceptions.ResourceNotFoundException;
@@ -36,6 +38,21 @@ public class AgentsController {
     public final AgentDTO getAgent(@PathVariable("id") Long id) throws ResourceNotFoundException {
         logger.debug("rest getAgent({})", id);
         try {
+            return agentFacade.getAgentById(id);
+        } catch (Exception ex) {
+            throw new ResourceNotFoundException();
+        }
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public final AgentDTO updateAgent(
+            @PathVariable("id") Long id,
+            @RequestBody AgentUpdateDTO agentUpdateDTO
+    ) throws ResourceNotFoundException {
+        logger.debug("rest update agent ({})", agentUpdateDTO);
+        try {
+            agentFacade.editAgent(agentUpdateDTO);
             return agentFacade.getAgentById(id);
         } catch (Exception ex) {
             throw new ResourceNotFoundException();

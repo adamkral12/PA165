@@ -54,6 +54,14 @@ public class AgentServiceImpl extends GenericServiceImpl<Agent, AgentDao> implem
     }
 
     @Override
+    public Agent updateAgent(Agent agent) {
+        if (agent == null) {
+            throw new NullPointerException("agent cannot be null");
+        }
+        return getDao().merge(agent);
+    }
+
+    @Override
     public Agent getAgentByCodeName(String codename) {
         if (codename == null) {
             throw new NullPointerException("Code name cannot be null");

@@ -1,7 +1,7 @@
 import * as React from "react";
 import "../SharedStyles.css";
 import "./AgentsPage.css"
-import {getAgentRanks, getAllAgents, getAllLanguages} from "../../services/agentService";
+import {editAgent, getAgentRanks, getAllAgents, getAllLanguages} from "../../services/agentService";
 import {IAgent} from "../../types/Agent";
 
 interface IAgentsState {
@@ -9,6 +9,7 @@ interface IAgentsState {
     readonly newAgent: INewAgent
     readonly ranks: string[]
     readonly languages: string[]
+    readonly edit: boolean
 }
 
 export interface INewAgent {
@@ -38,7 +39,8 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
                 };
                 this.setState({
                     agents,
-                    newAgent
+                    newAgent,
+                    edit: false
                 });
             }
         );
@@ -67,7 +69,8 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
                     id: agent.id,
                 };
                 this.setState({
-                    newAgent
+                    newAgent,
+                    edit: true
                 });
             }
         });
@@ -79,6 +82,29 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
 
     private saveEditedAgent() {
         console.log(this.state.newAgent);
+        this.state.newAgent.languages = ["SK"];
+        editAgent(this.state.newAgent).then(
+            () => {
+                this.loadData();
+                this.clearEditRow();
+            }, () => {
+                this.clearEditRow();
+            }
+        );
+    }
+
+    private clearEditRow() {
+        const newAgent = {
+            name: "",
+            birthDate: "",
+            languages: [],
+            rank: "",
+            id: 1,
+        };
+        this.setState({
+            newAgent,
+            edit: false
+        });
     }
 
     public render() {
@@ -108,34 +134,36 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
                         </thead>
                         <tbody>
                             {tableRows}
-                            <tr>
-                                <td><input type="text" defaultValue={this.state.newAgent.name} onChange={(evt) => this.updateNewAgent(evt.target.value, "name")}/></td>
-                                <td><input type="text" defaultValue={this.state.newAgent.birthDate} onChange={(evt) => this.updateNewAgent(evt.target.value, "birthDate")}/></td>
-                                <td>
-                                    <select value={this.state.newAgent.languages[0]} onChange={(evt) => this.updateNewAgent(evt.target.value, "languages")}
-                                    >
-                                        <option value={""}/>
-                                        {this.state.languages.map((language: string) =>
-                                            <option key={language}
-                                                    value={language}>{language}</option>
-                                        )}
-                                    </select>
-                                </td>
-                                <td>
-                                    <select value={this.state.newAgent.rank} onChange={(evt) => this.updateNewAgent(evt.target.value, "rank")}
-                                    >
-                                        <option value={""}/>
-                                        {this.state.ranks.map((rank: string) =>
-                                            <option key={rank}
-                                                    value={rank}>{rank}</option>
-                                        )}
-                                    </select>
-                                </td>
-                                <td>
-                                    <button className={"btn btn-primary save-button"} onClick={() => this.saveEditedAgent()}>Save</button>
-                                    <button className={"btn btn-info cancel-button"}>Cancel</button>
-                                </td>
-                            </tr>
+                            {this.state.edit && (
+                                <tr>
+                                    <td><input type="text" defaultValue={this.state.newAgent.name} onChange={(evt) => this.updateNewAgent(evt.target.value, "name")}/></td>
+                                    <td><input type="text" defaultValue={this.state.newAgent.birthDate} onChange={(evt) => this.updateNewAgent(evt.target.value, "birthDate")}/></td>
+                                    <td>
+                                        <select value={this.state.newAgent.languages[0] ? this.state.newAgent.languages[0] : ""} onChange={(evt) => this.updateNewAgent(evt.target.value, "languages")}
+                                        >
+                                            <option value={""}/>
+                                            {this.state.languages.map((language: string) =>
+                                                <option key={language}
+                                                        value={language}>{language}</option>
+                                            )}
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select value={this.state.newAgent.rank} onChange={(evt) => this.updateNewAgent(evt.target.value, "rank")}
+                                        >
+                                            <option value={""}/>
+                                            {this.state.ranks.map((rank: string) =>
+                                                <option key={rank}
+                                                        value={rank}>{rank}</option>
+                                            )}
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <button className={"btn btn-primary save-button"} onClick={() => this.saveEditedAgent()}>Save</button>
+                                        <button className={"btn btn-info cancel-button"} onClick={() => this.clearEditRow()}>Cancel</button>
+                                    </td>
+                                </tr>
+                            )}
                         </tbody>
                     </table>
                 </div>
