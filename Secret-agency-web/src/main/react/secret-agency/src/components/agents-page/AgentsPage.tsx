@@ -3,6 +3,8 @@ import "../SharedStyles.css";
 import "./AgentsPage.css"
 import {editAgent, getAgentRanks, getAllAgents, getAllLanguages} from "../../services/agentService";
 import {IAgent} from "../../types/Agent";
+import Select from 'react-select';
+import {ISelectOption, mapOptionsForSelect, mapValuesFromSelect} from "../../utils/SelectionOption";
 
 interface IAgentsState {
     readonly agents: IAgent[];
@@ -75,12 +77,16 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
         });
     }
 
-    private updateNewAgent(value: string, prop: string) {
-        if (prop === "languages") {
-            this.setState((prevState) => ({newAgent: {...prevState.newAgent, languages: value.split(",")}}));
-            return;
+    private updateNewAgent(value: string | ISelectOption | ISelectOption[] | undefined | null, prop: string) {
+        if (typeof value === 'string') {
+            this.state.newAgent[prop] = value;
+        } else if (value !== undefined && value !== null) {
+            if (Array.isArray(value)) {
+                this.setState((prevState) =>
+                    ({newAgent: {...prevState.newAgent, languages: mapValuesFromSelect(value)}})
+                );
+            }
         }
-        this.state.newAgent[prop] = value;
     }
 
     private saveEditedAgent() {
@@ -155,6 +161,7 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
                     </td>
                 </tr>
             );
+
             return (
                 <div className="table-wrapper">
                     {this.state.formErrors.length > 0 && <div className={'alert alert-danger'}>
@@ -179,7 +186,14 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
                                 <tr key={this.state.newAgent.id}>
                                     <td><input type="text" defaultValue={this.state.newAgent.name} onChange={(evt) => this.updateNewAgent(evt.target.value, "name")}/></td>
                                     <td><input type="text" defaultValue={this.state.newAgent.birthDate} onChange={(evt) => this.updateNewAgent(evt.target.value, "birthDate")}/></td>
-                                    <td><input type="text" defaultValue={this.state.newAgent.languages.join(",")} onChange={(evt) => this.updateNewAgent(evt.target.value, "languages")}/></td>
+                                    <td>
+                                        <Select
+                                            isMulti={true}
+                                            options={mapOptionsForSelect(this.state.languages)}
+                                            value={mapOptionsForSelect(this.state.newAgent.languages)}
+                                            onChange={(options) => this.updateNewAgent(options, "languages")}
+                                        />
+                                    </td>
                                     <td>
                                         <select defaultValue={this.state.newAgent.rank} onChange={(evt) => this.updateNewAgent(evt.target.value, "rank")}
                                         >
