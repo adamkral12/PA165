@@ -5,4 +5,5 @@ export interface IDepartment {
     readonly latitude: number;
     readonly longitude: number;
     readonly specialization: string;
+    readonly agentIds: number[];
 }

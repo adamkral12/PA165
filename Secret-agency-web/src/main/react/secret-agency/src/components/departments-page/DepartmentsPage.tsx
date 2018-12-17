@@ -5,7 +5,7 @@ import {IDepartment} from "../../types/Department";
 import "../SharedStyles.css";
 
 import {
-    createDepartment,
+    createDepartment, deleteDepartment,
     editDepartment,
     getAllDepartments,
     getSpecializations
@@ -65,7 +65,8 @@ export class DepartmentsPage extends React.Component<{}, IDepartmentsState> {
             country,
             latitude: parseFloat(latitude),
             longitude: parseFloat(longitude),
-            specialization
+            specialization,
+            agentIds: [],
         };
         const errors = this.validate(department);
         if (errors.length === 0) {
@@ -159,6 +160,34 @@ export class DepartmentsPage extends React.Component<{}, IDepartmentsState> {
         }));
     };
 
+    private onDelete = async (departmentId: number) => {
+        const department = this.state.departments.get(departmentId);
+        if (department.agentIds.length > 0) {
+            this.setState(_ => ({
+                formErrors: ["There are still some agents in this department, fire them before you tear down the building"]
+            }))
+        } else {
+            try {
+                await deleteDepartment(department.id);
+                const departments = Immutable.Map<number, IDepartment>((await getAllDepartments()).map(
+                    (dep: IDepartment) => [
+                        dep.id, dep
+                    ]
+                ));
+
+                this.setState(_ => ({
+                    departments,
+                    formErrors: [],
+                }));
+
+            } catch (e) {
+                this.setState( _ => ({
+                    formErrors: [e.message],
+                }));
+            }
+        }
+    };
+
     public render() {
         if (this.state) {
             const { departments } = this.state;
@@ -174,7 +203,8 @@ export class DepartmentsPage extends React.Component<{}, IDepartmentsState> {
                 <DepartmentShowRow
                     key={key}
                     department={departments.get(key)}
-                    onStartEdit={this.startEditDepartment.bind(this, key)}
+                    onStartEdit={() => this.startEditDepartment(key)}
+                    onDelete={() => this.onDelete(key)}
                 />
             );
             const {city, country,latitude, longitude, specialization} = this.state.newDepartment;

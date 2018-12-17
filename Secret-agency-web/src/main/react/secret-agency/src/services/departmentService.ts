@@ -1,4 +1,4 @@
-import {GET, POST, PUT, REST_URL_BASE} from "../utils/requestUtils";
+import {DELETE, GET, POST, PUT, REST_URL_BASE} from "../utils/requestUtils";
 import {IDepartment} from "../types/Department";
 
 export const getAllDepartments = (): Promise<IDepartment[]> => {
@@ -55,4 +55,14 @@ export const getDepartmentsBySpecialization = (specialization: string): Promise<
             return response.data;
         }
     )
+};
+
+export const deleteDepartment = (departmentId: number): Promise<void> => {
+    return DELETE<void>(`${REST_URL_BASE}/departments/${departmentId}`).then(
+        response => {
+            return response.data;
+        }
+    ).catch((error) => {
+        throw new Error(error.message || error.response.data as string);
+    })
 };
