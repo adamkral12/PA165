@@ -8,6 +8,9 @@ import {ISelectOption, mapOptionsForSelect, mapValuesFromSelect} from "../../uti
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import * as moment from 'moment';
+import {IDepartment} from "../../types/Department";
+import {getAllDepartments} from "../../services/departmentService";
+import {defineAbility} from "../../config/ability";
 
 interface IAgentsState {
     readonly agents: IAgent[];
@@ -16,6 +19,7 @@ interface IAgentsState {
     readonly languages: string[];
     readonly edit: boolean;
     readonly formErrors: string[];
+    readonly departments: IDepartment[];
 }
 
 export interface INewAgent {
@@ -37,6 +41,7 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
         const agents = await getAllAgents();
         const ranks = await getAgentRanks();
         const languages = await getAllLanguages();
+        const departments = await getAllDepartments();
 
         // set default properties
         const newAgent = {
@@ -48,6 +53,7 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
             codeName: ""
         };
 
+
         this.setState(_ => ({
             agents,
             newAgent,
@@ -55,6 +61,7 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
             ranks,
             languages,
             formErrors: [],
+            departments,
         }));
     }
 
@@ -168,7 +175,7 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
                     <td>{agent.rank}</td>
                     <td>{agent.codeName}</td>
                     <td>
-                        <button className="btn btn-primary edit-button" onClick={() => this.editAgent(agent.id)}>Edit</button>
+                        {defineAbility().can("edit", 'Agent') && <button className="btn btn-primary edit-button" onClick={() => this.editAgent(agent.id)}>Edit</button>}
                     </td>
                 </tr>
             );
