@@ -61,8 +61,16 @@ public class AgentFacadeImpl implements AgentFacade {
 
     @Override
     public AgentDTO editAgent(AgentUpdateDTO agentUpdateDTO) {
-        Agent mappedAgent = beanMappingService.mapTo(agentUpdateDTO, Agent.class);
-        agentService.updateAgent(mappedAgent);
+        Agent agentToBeUpdated = agentService.getEntityById(agentUpdateDTO.getId());
+
+        agentToBeUpdated.setDepartment(departmentService.getEntityById(agentUpdateDTO.getDepartmentId()));
+        agentToBeUpdated.setRank(agentUpdateDTO.getRank());
+        agentToBeUpdated.setName(agentUpdateDTO.getName());
+        agentToBeUpdated.setBirthDate(agentUpdateDTO.getBirthDate());
+        agentToBeUpdated.setLanguages(agentUpdateDTO.getLanguages());
+        agentToBeUpdated.setCodeName(agentUpdateDTO.getCodeName());
+
+        agentService.updateAgent(agentToBeUpdated);
         return beanMappingService.mapTo(agentService.getEntityById(agentUpdateDTO.getId()), AgentDTO.class);
     }
 

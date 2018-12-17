@@ -13,12 +13,12 @@ interface IAgentsState {
 }
 
 export interface INewAgent {
-    name: string,
-    birthDate: string,
-    languages: string[],
-    rank: string,
-    id: number,
-    codeName: string
+    readonly name: string;
+    readonly birthDate: string;
+    readonly languages: string[];
+    readonly rank: string;
+    readonly id: number;
+    readonly codeName: string;
 }
 
 export class AgentsPage extends React.Component<any, IAgentsState> {
@@ -73,9 +73,10 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
                     languages: agent.languages,
                     rank: agent.rank,
                     id: agent.id,
-                    codeName: agent.codeName,
                     departmentId: agent.department.id,
+                    codeName: agent.codeName,
                 };
+                console.log(newAgent);
                 this.setState({
                     newAgent,
                     edit: true
@@ -86,7 +87,7 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
 
     private updateNewAgent(value: string, prop: string) {
         if (prop === "languages") {
-            this.state.newAgent.languages = value.split(",");
+            this.setState((prevState) => ({newAgent: {...prevState.newAgent, languages: value.split(",")}}));
             return;
         }
         this.state.newAgent[prop] = value;
@@ -94,6 +95,7 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
 
     private saveEditedAgent() {
         if (!this.isEditValid()) { return; }
+        console.log(this.state.newAgent);
         editAgent(this.state.newAgent).then(
             editedAgent => {
                 const agents = this.state.agents;
