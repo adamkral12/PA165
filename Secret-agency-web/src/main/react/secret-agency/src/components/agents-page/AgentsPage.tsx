@@ -61,6 +61,7 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
     private editAgent(id: number) {
         this.state.agents.forEach(agent => {
             if (agent.id === id) {
+                this.clearEditRow();
                 const newAgent = {
                     name: agent.name,
                     birthDate: agent.birthDate.toString(),
@@ -81,8 +82,6 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
     }
 
     private saveEditedAgent() {
-        console.log(this.state.newAgent);
-        this.state.newAgent.languages = ["SK"];
         editAgent(this.state.newAgent).then(
             () => {
                 this.loadData();
@@ -136,8 +135,8 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
                             {tableRows}
                             {this.state.edit && (
                                 <tr>
-                                    <td><input type="text" defaultValue={this.state.newAgent.name} onChange={(evt) => this.updateNewAgent(evt.target.value, "name")}/></td>
-                                    <td><input type="text" defaultValue={this.state.newAgent.birthDate} onChange={(evt) => this.updateNewAgent(evt.target.value, "birthDate")}/></td>
+                                    <td><input type="text" value={this.state.newAgent.name} onChange={(evt) => this.updateNewAgent(evt.target.value, "name")}/></td>
+                                    <td><input type="text" value={this.state.newAgent.birthDate} onChange={(evt) => this.updateNewAgent(evt.target.value, "birthDate")}/></td>
                                     <td>
                                         <select value={this.state.newAgent.languages[0] ? this.state.newAgent.languages[0] : ""} onChange={(evt) => this.updateNewAgent(evt.target.value, "languages")}
                                         >
