@@ -6,7 +6,9 @@ export const getAllDepartments = (): Promise<IDepartment[]> => {
         response => {
             return response.data;
         }
-    )
+    ).catch((error) => {
+        throw new Error(error.message || error.response.data as string);
+    })
 };
 
 export const createDepartment = (data: IDepartment): Promise<IDepartment> => (
@@ -14,7 +16,9 @@ export const createDepartment = (data: IDepartment): Promise<IDepartment> => (
         response => {
             return response.data;
         }
-    )
+    ).catch((error) => {
+        throw new Error(error.message || error.response.data as string);
+    })
 );
 
 export const getSpecializations = (): Promise<string[]> => (
@@ -22,23 +26,29 @@ export const getSpecializations = (): Promise<string[]> => (
         response => {
             return response.data;
         }
-    )
+    ).catch((error) => {
+        throw new Error(error.message || error.response.data as string);
+    })
 );
 
-export const editDepartment = (data: IDepartment): Promise<IDepartment> => (
-    PUT<IDepartment>(`${REST_URL_BASE}/departments/${data.id}`, data).then(
+export const editDepartment = (data: IDepartment): Promise<IDepartment> => {
+    return PUT<IDepartment>(`${REST_URL_BASE}/departments/${data.id}`, data).then(
         response => {
             return response.data;
         }
-    )
-);
+    ).catch((error) => {
+        throw new Error(error.message || error.response.data as string);
+    });
+};
 
 export const getDepartmentsByCity = (city: string): Promise<IDepartment[]> => {
     return GET<IDepartment[]>(`${REST_URL_BASE}/departments/city/${city}`).then(
         response => {
             return response.data;
         }
-    )
+    ).catch((error) => {
+        throw new Error(error.message || error.response.data as string);
+    });
 };
 
 export const getDepartmentsByCountry = (country: string): Promise<IDepartment[]> => {
@@ -46,7 +56,9 @@ export const getDepartmentsByCountry = (country: string): Promise<IDepartment[]>
         response => {
             return response.data;
         }
-    )
+    ).catch((error) => {
+        throw new Error(error.message || error.response.data as string);
+    });
 };
 
 export const getDepartmentsBySpecialization = (specialization: string): Promise<IDepartment[]> => {
@@ -54,7 +66,9 @@ export const getDepartmentsBySpecialization = (specialization: string): Promise<
         response => {
             return response.data;
         }
-    )
+    ).catch((error) => {
+        throw new Error(error.message || error.response.data as string);
+    });
 };
 
 export const deleteDepartment = (departmentId: number): Promise<void> => {

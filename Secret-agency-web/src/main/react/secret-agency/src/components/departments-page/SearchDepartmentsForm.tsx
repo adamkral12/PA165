@@ -13,6 +13,7 @@ interface ISearchDepartmentsFormState {
     readonly searchValue: string;
     readonly searchType: string;
     readonly searchTypes: string[];
+    readonly serverError: string;
 }
 
 interface ISearchDepartmentsFormProps {
@@ -37,7 +38,8 @@ export class SearchDepartmentsForm extends React.Component<ISearchDepartmentsFor
         this.state = {
             searchType: "",
             searchValue: "",
-            searchTypes: searchByValues
+            searchTypes: searchByValues,
+            serverError: "",
         }
     }
 
@@ -60,32 +62,47 @@ export class SearchDepartmentsForm extends React.Component<ISearchDepartmentsFor
     private onSearch = async (event: MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
         let departments = [];
-        switch (this.state.searchType) {
-            case SEARCH_BY_VALUE_CITY:
-                departments = await getDepartmentsByCity(this.state.searchValue);
-                break;
-            case SEARCH_BY_VALUE_COUNTRY:
-                departments = await getDepartmentsByCountry(this.state.searchValue);
-                break;
-            case SEARCH_BY_VALUE_SPECIALIZATION:
-                departments = await getDepartmentsBySpecialization(this.state.searchValue);
-                break;
-            default:
-                departments = await getAllDepartments();
-                break;
+        if (!this.state.searchValue.trim()) {
+            this.setState( _ => ({
+                serverError: "Search parameter cannot be empty",
+            }));
+            return;
         }
+        try {
+            switch (this.state.searchType) {
+                case SEARCH_BY_VALUE_CITY:
+                    departments = await getDepartmentsByCity(this.state.searchValue);
+                    break;
+                case SEARCH_BY_VALUE_COUNTRY:
+                    departments = await getDepartmentsByCountry(this.state.searchValue);
+                    break;
+                case SEARCH_BY_VALUE_SPECIALIZATION:
+                    departments = await getDepartmentsBySpecialization(this.state.searchValue);
+                    break;
+                default:
+                    departments = await getAllDepartments();
+                    break;
+            }
 
-        this.props.onSearch(
-            Immutable.Map<number, IDepartment>((departments).map(
-            (department: IDepartment) => [
-                department.id, department
-            ]
-        )));
+            this.props.onSearch(
+                Immutable.Map<number, IDepartment>((departments).map(
+                    (department: IDepartment) => [
+                        department.id, department
+                    ]
+                )));
+
+            this.setState(_ => ({
+                serverError: "",
+            }));
+        } catch (e) {
+            this.setState(_ => ({serverError: e.message}));
+        }
     };
 
     public render() {
         return (
             <div className={"search-by-form row"}>
+                {this.state.serverError && <div className={"alert alert-danger col-sm-12"}>{this.state.serverError}</div>}
                 <div className="input-group mb-3 search-by-form-input">
                     <div className="input-group-prepend">
                         <span className="input-group-text" id="basic-addon1">Filter departments:</span>
