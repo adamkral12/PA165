@@ -179,6 +179,7 @@ export class DepartmentsPage extends React.Component<{}, IDepartmentsState> {
     };
 
     private onDelete = async (departmentId: number) => {
+        console.log(this.state.departments);
         const department = this.state.departments.get(departmentId);
         if (department.agentIds.length > 0) {
             this.setState(_ => ({
@@ -235,7 +236,7 @@ export class DepartmentsPage extends React.Component<{}, IDepartmentsState> {
             const {city, country,latitude, longitude, specialization} = this.state.newDepartment;
             return (
                 <div>
-                    <div className="table-wrapper">
+                    <div>
                         {this.state.formErrors.length > 0 && <div className={'alert alert-danger'}>
                             {this.state.formErrors.map((error: string, index) =>
                                 <p key={index}>{error}</p>

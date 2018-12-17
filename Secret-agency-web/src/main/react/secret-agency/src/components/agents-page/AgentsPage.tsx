@@ -184,7 +184,7 @@ export class AgentsPage extends React.Component<any, IAgentsState> {
             );
 
             return (
-                <div className="table-wrapper">
+                <div>
                     {this.state.formErrors.length > 0 && <div className={'alert alert-danger'}>
                         {this.state.formErrors.map((error: string, index) =>
                             <p key={index}>{error}</p>
