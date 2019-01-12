@@ -175,13 +175,9 @@ export class MissionNewPage extends React.Component<IProps, IState> {
             return <div>Form is loading...</div>;
         }
 
-        // server responded with error - form cannot be loaded
-        if (this.state.errorMsg !== "") {
-            return <Alert bsStyle={"danger"}>{this.state.errorMsg}</Alert>
-        }
-
         return (
             <div className={'MissionNewForm'}>
+                {this.state.errorMsg !== "" && <Alert bsStyle={"danger"}>{this.state.errorMsg}</Alert>}
                 <h2 className={"mt-2"}>Create new mission</h2>
                 <form className={'MissionNewForm__form'}>
                     <div className={"form-row"}>

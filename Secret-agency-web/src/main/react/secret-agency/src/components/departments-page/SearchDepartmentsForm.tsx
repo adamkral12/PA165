@@ -23,7 +23,7 @@ interface ISearchDepartmentsFormProps {
 const SEARCH_BY_VALUE_CITY = 'city';
 const SEARCH_BY_VALUE_COUNTRY = 'country';
 const SEARCH_BY_VALUE_SPECIALIZATION = 'specialization';
-const SEARCH_BY_VALUE_NOTHING = '';
+const SEARCH_BY_VALUE_NOTHING = '--reset--';
 
 const searchByValues = [
     SEARCH_BY_VALUE_CITY,

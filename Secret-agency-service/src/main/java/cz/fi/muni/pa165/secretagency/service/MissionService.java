@@ -52,4 +52,10 @@ public interface MissionService extends GenericService<Mission> {
      * @return currently active missions
      */
     List<Mission> getActiveMissions();
+
+    /**
+     * Return missions with given name
+     * @return missions with given name
+     */
+    List<Mission> getMissionByName(String name);
 }

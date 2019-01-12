@@ -76,4 +76,12 @@ public class MissionFacadeImpl implements MissionFacade {
     public List<MissionDTO> getActiveMissions() {
         return beanMappingService.mapTo(missionService.getActiveMissions(), MissionDTO.class);
     }
+
+    @Override
+    public MissionDTO getMissionByName(String name) {
+        if (missionService.getMissionByName(name).isEmpty()) {
+            return null;
+        }
+        return beanMappingService.mapTo(missionService.getMissionByName(name).get(0), MissionDTO.class);
+    }
 }

@@ -55,4 +55,14 @@ public class MissionDaoImpl extends GenericDaoImpl<Mission> implements MissionDa
         query.setParameter("now", now);
         return query.getResultList();
     }
+
+    @Override
+    public List<Mission> getMissionByName(String name) {
+        TypedQuery<Mission> query = em
+                .createQuery(
+                        "SELECT m FROM Mission m WHERE m.name = :name",
+                        Mission.class);
+        query.setParameter("name", name);
+        return query.getResultList();
+    }
 }

@@ -73,4 +73,10 @@ public interface MissionFacade {
      * @return currently active missions
      */
     List<MissionDTO> getActiveMissions();
+
+    /**
+     * Returns a single mission by given name (name is unique)
+     * @return mission with given name or null
+     */
+    MissionDTO getMissionByName(String name);
 }
