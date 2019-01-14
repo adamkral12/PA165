@@ -211,11 +211,6 @@ export class MissionEditPage extends React.Component<IProps, IState> {
             return <div>Form is loading...</div>;
         }
 
-        // server responded with error - form cannot be loaded
-        if (this.state.errorMsg !== "") {
-            return <Alert bsStyle={"danger"}>{this.state.errorMsg}</Alert>
-        }
-
         let endedMsg = "OK";
         let startedMsg = "OK";
         if (this.state.startedError) {
@@ -231,6 +226,7 @@ export class MissionEditPage extends React.Component<IProps, IState> {
 
         return (
             <div className={'MissionNewForm'}>
+                {this.state.errorMsg !== "" && <Alert bsStyle={"danger"}>{this.state.errorMsg}</Alert>}
                 <h2 className={"mt-2"}>Edit mission</h2>
                 <form className={'MissionNewForm__form'}>
                     <div className={"form-row"}>

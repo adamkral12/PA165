@@ -5,7 +5,7 @@ import cz.fi.muni.pa165.secretagency.dto.MissionCreateDTO;
 import cz.fi.muni.pa165.secretagency.dto.MissionDTO;
 import cz.fi.muni.pa165.secretagency.dto.MissionUpdateDTO;
 import cz.fi.muni.pa165.secretagency.enums.MissionTypeEnum;
-import cz.fi.muni.pa165.secretagency.exceptions.InvalidDeleteRequestException;
+import cz.fi.muni.pa165.secretagency.exceptions.InvalidMissionNameException;
 import cz.fi.muni.pa165.secretagency.exceptions.ResourceNotFoundException;
 import cz.fi.muni.pa165.secretagency.facade.AgentFacade;
 import cz.fi.muni.pa165.secretagency.facade.MissionFacade;
@@ -15,11 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -154,12 +150,16 @@ public class MissionsController {
      *
      * @param missionCreateDTO MissionCreateDTO with required fields for creation
      * @return The created mission MissionDTO
+     * @throws InvalidMissionNameException When mission with given name already exists
      */
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public final MissionDTO createMission(@Valid @RequestBody MissionCreateDTO missionCreateDTO) {
         logger.debug("rest create mission");
-
+        MissionDTO existingMission = missionFacade.getMissionByName(missionCreateDTO.getName());
+        if (existingMission != null) {
+            throw new InvalidMissionNameException();
+        }
         Long missionId = missionFacade.createMission(missionCreateDTO);
         return missionFacade.getMissionById(missionId);
     }
@@ -179,9 +179,18 @@ public class MissionsController {
     public final MissionDTO updateMission(@PathVariable("id") Long id, @Valid @RequestBody MissionUpdateDTO missionUpdateDTO) {
         logger.debug("rest update mission with id: {}", id);
 
+        MissionDTO existingMissionName = missionFacade.getMissionByName(missionUpdateDTO.getName());
+//            Check if different mission with this name already exists
+        if (existingMissionName != null) {
+            if(!existingMissionName.getId().equals(id)) {
+                throw new InvalidMissionNameException();
+            }
+        }
+
         try {
             missionUpdateDTO.setId(id);
             missionFacade.updateMission(missionUpdateDTO);
+
             return missionFacade.getMissionById(id);
         } catch (Exception ex) {
             throw new ResourceNotFoundException();

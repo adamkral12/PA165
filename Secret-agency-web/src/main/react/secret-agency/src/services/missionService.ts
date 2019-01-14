@@ -1,5 +1,6 @@
 import {DELETE, GET, POST, PUT, REST_URL_BASE} from "../utils/requestUtils";
 import {IMission} from "../types/Mission";
+import {AxiosError} from "axios";
 
 export function getAllMissions(): Promise<IMission[]> {
     return GET<IMission[]>(`${REST_URL_BASE}/missions`).then(response => {
@@ -28,7 +29,9 @@ export const createMission = (data: IMission): Promise<IMission> => (
         response => {
             return response.data as IMission;
         }
-    )
+    ).catch((error: AxiosError) => {
+        return error.response ? error.response.data.message : error.message;
+    })
 );
 
 export const updateMission = (data: IMission): Promise<IMission> => (
@@ -36,7 +39,9 @@ export const updateMission = (data: IMission): Promise<IMission> => (
         response => {
             return response.data as IMission;
         }
-    )
+    ).catch((error: AxiosError) => {
+        return error.response ? error.response.data.message : error.message;
+    })
 );
 
 export const removeAgentFromMission = (agentId: number, missionId: number): void => {

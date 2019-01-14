@@ -38,4 +38,11 @@ public interface MissionDao extends GenericDao<Mission> {
      * @return currently active missions
      */
     List<Mission> getActiveMissions();
+
+    /**
+     * Returns missions by given name
+     * @param name of a mission
+     * @return missions with given name - there should be always one given by constraints
+     */
+    List<Mission> getMissionsByName(String name);
 }
