@@ -58,11 +58,11 @@ public class MissionServiceImpl extends GenericServiceImpl<Mission, MissionDao> 
     }
 
     @Override
-    public List<Mission> getMissionByName(String name) {
+    public List<Mission> getMissionsByName(String name) {
         if(name == null) {
             throw new NullPointerException("Name can not be null");
         }
 
-        return getDao().getMissionByName(name);
+        return getDao().getMissionsByName(name);
     }
 }

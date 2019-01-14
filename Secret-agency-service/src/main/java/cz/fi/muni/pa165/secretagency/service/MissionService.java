@@ -57,5 +57,5 @@ public interface MissionService extends GenericService<Mission> {
      * Return missions with given name
      * @return missions with given name
      */
-    List<Mission> getMissionByName(String name);
+    List<Mission> getMissionsByName(String name);
 }

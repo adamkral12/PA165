@@ -79,9 +79,9 @@ public class MissionFacadeImpl implements MissionFacade {
 
     @Override
     public MissionDTO getMissionByName(String name) {
-        if (missionService.getMissionByName(name).isEmpty()) {
+        if (missionService.getMissionsByName(name).isEmpty()) {
             return null;
         }
-        return beanMappingService.mapTo(missionService.getMissionByName(name).get(0), MissionDTO.class);
+        return beanMappingService.mapTo(missionService.getMissionsByName(name).get(0), MissionDTO.class);
     }
 }

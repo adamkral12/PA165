@@ -57,7 +57,7 @@ public class MissionDaoImpl extends GenericDaoImpl<Mission> implements MissionDa
     }
 
     @Override
-    public List<Mission> getMissionByName(String name) {
+    public List<Mission> getMissionsByName(String name) {
         TypedQuery<Mission> query = em
                 .createQuery(
                         "SELECT m FROM Mission m WHERE m.name = :name",

@@ -44,5 +44,5 @@ public interface MissionDao extends GenericDao<Mission> {
      * @param name of a mission
      * @return missions with given name - there should be always one given by constraints
      */
-    List<Mission> getMissionByName(String name);
+    List<Mission> getMissionsByName(String name);
 }
